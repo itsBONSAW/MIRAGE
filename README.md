@@ -1,6 +1,5 @@
 <div align="center">
-# M I R A G E
-### MITM Interception, Routing & Analytical Graph Engine
+M I R A G E | MITM Interception, Routing & Analytical Graph Engine
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Web%20UI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)

@@ -1,4 +1,6 @@
 <div align="center">
+<img width="1677" height="938" alt="3" src="https://github.com/user-attachments/assets/419e3f5f-98d3-43b5-838a-3d3c67376fc9" />
+
 M I R A G E | MITM Interception, Routing & Analytical Graph Engine
 
 

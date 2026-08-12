@@ -72,6 +72,7 @@ mirage/
 ├── requirements.txt
 ├── static/
 │   └── index.html # Cyberpunk Web UI (Tailwind CSS + Vanilla JS)
+│   └── tailwind.js # Local Tailwind v3 Engine (Offline support)
 └── core/ # Backend Engine
     ├── network.py # Nmap Network Scanner logic
     ├── mitm.py # Stealth ARP Spoofer

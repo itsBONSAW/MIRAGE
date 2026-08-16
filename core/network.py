@@ -7,26 +7,29 @@ class NetworkScanner:
         self.interface = interface
         self.on_log = on_log_callback
         self.on_host = on_host_callback
-        self.running = False
+        self.stop_event = threading.Event()
         self.thread = None
         self.process = None
 
+    def is_alive(self):
+        return self.thread and self.thread.is_alive()
+
     def start(self, subnet="192.168.1.0/24"):
-        self.running = True
+        self.stop_event.clear()
         self.thread = threading.Thread(target=self._scan_loop, args=(subnet,), daemon=True)
         self.thread.start()
 
     def stop(self):
-        self.running = False
+        self.stop_event.set()
         if self.process:
             self.process.terminate()
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=2)
         self.on_log("[!] Network scan stopped.")
 
     def _scan_loop(self, subnet):
         self.on_log(f"[*] Running nmap scan on {subnet}...")
-        
         cmd = ["nmap", "-sn", subnet]
-        
         hosts = []
         current_ip = None
         current_mac = None
@@ -37,7 +40,7 @@ class NetworkScanner:
             self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             
             for line in self.process.stdout:
-                if not self.running:
+                if self.stop_event.is_set():
                     break
                     
                 line = line.strip()
@@ -74,11 +77,9 @@ class NetworkScanner:
                     "hostname": current_hostname or "Unknown"
                 })
 
-            if self.running:
+            if not self.stop_event.is_set():
                 self.on_host(hosts)
                 self.on_log(f"[*] Scan complete. Found {len(hosts)} active hosts.")
                 
         except Exception as e:
             self.on_log(f"[-] Scan error: {e}")
-        finally:
-            self.running = False

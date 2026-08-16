@@ -1,8 +1,6 @@
 <div align="center">
-<img width="1677" height="938" alt="3" src="https://github.com/user-attachments/assets/419e3f5f-98d3-43b5-838a-3d3c67376fc9" />
-
-M I R A G E | MITM Interception, Routing & Analytical Graph Engine
-
+# M I R A G E
+### MITM Interception, Routing & Analytical Graph Engine
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Web%20UI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -58,8 +56,19 @@ Tested extensively and confirmed **invisible** on:
 ## 📸 Screenshots
 
 <div align="center">
-<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/19a7997d-9b13-4b7c-856f-7198a5463f41" />
-<img width="1920" height="1080" alt="2" src="https://github.com/user-attachments/assets/a93f770a-4ee6-4d8e-9517-23b8ee167f66" />
+
+**1. Main Dashboard & Live Traffic Graph**
+
+![MIRAGE Dashboard](SCREENSHOT_LINK_1_HERE)
+
+**2. Packet Inspector & Deep Payload Analysis**
+
+![MIRAGE Packet Inspector](SCREENSHOT_LINK_2_HERE)
+
+**3. Protocol Filtering & Live Search**
+
+![MIRAGE Filtering](SCREENSHOT_LINK_3_HERE)
+
 </div>
 
 ---
@@ -74,7 +83,6 @@ mirage/
 ├── requirements.txt
 ├── static/
 │   └── index.html # Cyberpunk Web UI (Tailwind CSS + Vanilla JS)
-│   └── tailwind.js # Local Tailwind v3 Engine (Offline support)
 └── core/ # Backend Engine
     ├── network.py # Nmap Network Scanner logic
     ├── mitm.py # Stealth ARP Spoofer
@@ -101,8 +109,8 @@ sudo apt install nmap tcpdump iptables iproute2
 ### Python Setup
 
 ```bash
-git clone https://github.com/itsBONSAW/MIRAGE.git
-cd MIRAGE
+git clone https://github.com/YOUR_GITHUB_USERNAME/mirage.git
+cd mirage
 pip install -r requirements.txt
 ```
 
@@ -135,7 +143,7 @@ Thank you to the AI for making this project come to life so rapidly.
 ---
 
 <div align="center">
-Made by itsBONSAW & AI
+Made by **[Your Name/GitHub Username]** & AI
 <br>
 <sub>Stay invisible. Happy Hacking.</sub>
 </div>

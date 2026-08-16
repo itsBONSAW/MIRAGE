@@ -134,6 +134,35 @@ Once running, open your browser and navigate to:
 
 ---
 
+## What's New in v2.0? (Major Update)
+### 🔒 WebSocket Authentication: Server connection now requires a security token to prevent unauthorized access within the local network.
+
+### 🛡️ Crash & Race Condition Fix:
+Implemented asyncio.Lock to eliminate concurrent command interference, achieving 100% server stability.
+
+### ⚡ Zero UI Freezing:
+Stopping operations (Scan/MITM) is now handled in separate threads, ensuring the Web UI remains completely responsive at all times.
+
+### 🧵 Thread Safety Improvements:
+Replaced unsafe boolean flags with threading.Event for immediate and secure termination of network engines.
+
+### 🧹 Automatic Network Cleanup:
+If the WebSocket connection drops unexpectedly, the tool automatically stops all operations and restores network settings (iptables/sysctl).
+
+### 🐛 Transparent Error Handling:
+Removed silent except: blocks. All exceptions are now clearly logged in the dashboard for easier debugging.
+
+### 🚀 Processing Speed Boost:
+Removed unnecessary terminal logging for individual packets, significantly reducing CPU usage and improving performance under heavy traffic.
+
+### 📊 Accurate Traffic Calculation:
+Added threading.Lock to byte counters, ensuring 100% precise RX/TX speed calculations without data races.
+
+### 🐍 Modern FastAPI Standards:
+Migrated from the deprecated @app.on_event to the modern lifespan context manager for future-proof compatibility.
+
+---
+
 ## 🤝 Acknowledgements
 
 I want to be completely transparent about the development process of MIRAGE. A significant portion of this tool's architecture, backend Python logic, and the cyberpunk-themed frontend were designed and written with the assistance of an AI language model. It acted as an incredible co-pilot, helping to debug complex threading issues, optimize the transparent bridge routing, and design the UI.

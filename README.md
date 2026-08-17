@@ -55,21 +55,10 @@ Tested extensively and confirmed **invisible** on:
 
 ## 📸 Screenshots
 
-<div align="center">
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_27" src="https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd" />
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_00_15" src="https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519" />
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_58" src="https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287" />
 
-**1. Main Dashboard & Live Traffic Graph**
-
-![MIRAGE Dashboard](SCREENSHOT_LINK_1_HERE)
-
-**2. Packet Inspector & Deep Payload Analysis**
-
-![MIRAGE Packet Inspector](SCREENSHOT_LINK_2_HERE)
-
-**3. Protocol Filtering & Live Search**
-
-![MIRAGE Filtering](SCREENSHOT_LINK_3_HERE)
-
-</div>
 
 ---
 
@@ -172,7 +161,5 @@ Thank you to the AI for making this project come to life so rapidly.
 ---
 
 <div align="center">
-Made by **[Your Name/GitHub Username]** & AI
-<br>
 <sub>Stay invisible. Happy Hacking.</sub>
 </div>

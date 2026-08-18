@@ -1,167 +1,662 @@
-<img width="1376" height="768" alt="image" src="https://github.com/user-attachments/assets/e91d309f-12b6-4db4-a821-bd6d407dcd9b" />
-
+<img width="100%" alt="MIRAGE Banner" src="[https://github.com/user-attachments/assets/e91d309f-12b6-4db4-a821-bd6d407dcd9b](https://github.com/user-attachments/assets/e91d309f-12b6-4db4-a821-bd6d407dcd9b)" />
 
 <div align="center">
-# M I R A G E | MITM Interception, Routing & Analytical Graph Engine
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Web%20UI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Tested%20On-Android%2013%20%7C%20Win%2011%20%7C%20Linux-darkgreen)]()
+# M I R A G E
 
-**A powerful, stealth-first Man-in-the-Middle (MITM) framework with a built-in Wireshark-style packet inspector.**
+### MITM Interception, Routing & Analytical Graph Engine
 
-*Invisible to the victim. Zero internet drops. Pure interceptive power.*
+<p>   <strong>A modular network security framework for authorized MITM testing, traffic analysis, and real-time packet inspection.</strong> </p>
+
+<p>   <a href="[https://www.python.org/](https://www.python.org/)">     <img src="[https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)">   </a>   <a href="[https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)">     <img src="[https://img.shields.io/badge/FastAPI-Web%20UI-009688?style=for-the-badge&logo=fastapi&logoColor=white](https://img.shields.io/badge/FastAPI-Web%20UI-009688?style=for-the-badge&logo=fastapi&logoColor=white)">   </a>   <a href="[https://scapy.net/](https://scapy.net/)">     <img src="[https://img.shields.io/badge/Scapy-Packet%20Analysis-111827?style=for-the-badge](https://img.shields.io/badge/Scapy-Packet%20Analysis-111827?style=for-the-badge)">   </a>   <a href="[https://nmap.org/](https://nmap.org/)">     <img src="[https://img.shields.io/badge/Nmap-Recon-4CAF50?style=for-the-badge](https://img.shields.io/badge/Nmap-Recon-4CAF50?style=for-the-badge)">   </a>   <a href="[https://www.tcpdump.org/](https://www.tcpdump.org/)">     <img src="[https://img.shields.io/badge/tcpdump-PCAP%20Capture-374151?style=for-the-badge](https://img.shields.io/badge/tcpdump-PCAP%20Capture-374151?style=for-the-badge)">   </a>   <a href="LICENSE">     <img src="[https://img.shields.io/badge/License-MIT-FF003C?style=for-the-badge](https://img.shields.io/badge/License-MIT-FF003C?style=for-the-badge)">   </a> </p>
+
+<p>   <code>Recon → Target → Interception → Capture → Analysis → Recovery</code> </p>
+
 </div>
 
 ---
 
 ## ⚠️ Disclaimer
 
-**MIRAGE** is designed for authorized security auditing, educational purposes, and network analysis.
-Attacking networks without explicit permission from the owner is illegal. The developer assumes no liability and is not responsible for any misuse or damage caused by this program.
+**MIRAGE is intended exclusively for authorized security testing, laboratory environments, education, and network analysis.**
+
+Only use MIRAGE on systems and networks you own or have explicit permission to test.
+
+Unauthorized interception, traffic manipulation, credential collection, or monitoring may be illegal. The developer assumes no responsibility for misuse, unauthorized activity, data loss, service disruption, or damage resulting from this software.
 
 ---
 
-## 🚀 Overview
+# 🧠 Overview
 
-Most MITM tools disrupt the victim's connection, triggering OS-level warnings (like the infamous Android `!` icon). **MIRAGE** is built differently.
+MIRAGE is a modular **Man-in-the-Middle (MITM) security testing framework** built around a real-time web dashboard.
 
-By implementing a **Transparent Bridge Architecture** (using kernel-level IP forwarding and custom `iptables`/`rp_filter` tuning), MIRAGE slips into the traffic stream completely unnoticed. It doesn't NAT the traffic; it silently passes it through while analyzing every byte with zero latency.
-
-Tested extensively and confirmed **invisible** on:
-- 📱 **Android 13** (No captive portal triggers, no connection drops)
-- 💻 **Windows 11** (No network warnings)
-- 🐧 **Linux** (Seamless routing)
-
-## ✨ Features
-
-### 🕵️ 1. Stealth-First Interception
-- **Transparent Bridge Mode:** Bypasses OS security checks without altering packet headers.
-- **ARP Spoofing Engine:** High-speed, dual-direction spoofing that keeps the victim's ARP cache poisoned without flooding the network.
-
-### 📊 2. Live Analytical Dashboard
-- **Real-time Traffic Graph:** Smooth, 60FPS Canvas-based graph showing Download/Upload speeds in KB/s.
-- **Target History:** Live extraction of visited URLs (DNS queries) for quick profiling.
-
-### 🔬 3. Integrated Packet Inspector
-- **Wireshark-Style Analysis:** Click on any packet in the live stream to open a detailed modal.
-- **Deep Dive:** View Source/Destination IPs, Ports, TCP Flags, and Payloads in both **ASCII** and **HEX** formats.
-- **Smart Filtering:** Instantly filter packets by protocol (TCP, UDP, ICMP, URL) or search through payloads with a live search bar.
-
-### 🧠 4. Credential Harvesting
-- Automatically extracts plaintext HTTP credentials (usernames, passwords) from POST requests.
-- Saves all captured credentials to an isolated file inside the `logs/` directory.
-
----
-
-## 📸 Screenshots
-
-<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_27" src="https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd" />
-<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_00_15" src="https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519" />
-<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_58" src="https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287" />
-
-
----
-
-## 🛠️ Architecture
-
-MIRAGE uses a decoupled architecture (FastAPI Backend + HTML/JS Frontend). It relies on `tcpdump` for kernel-level PCAP capture (zero latency) and `Scapy` for real-time payload analysis.
+Instead of being a single-purpose ARP spoofing script, MIRAGE combines several components into one controlled workflow:
 
 ```text
-mirage/
-├── main.py # FastAPI Web Server & WebSocket Manager
+Network Reconnaissance
+        │
+        ▼
+Target Discovery
+        │
+        ▼
+MITM Session
+        │
+        ├── ARP Interception
+        ├── IP Forwarding
+        ├── Traffic Capture
+        └── Packet Analysis
+                │
+                ▼
+          WebSocket Stream
+                │
+                ▼
+        Real-Time Dashboard
+                │
+                ▼
+        Session Cleanup
+        & Network Restore
+```
+
+The project is designed around **explicit state ownership, transactional network changes, failure-aware cleanup, and real-time analysis**.
+
+---
+
+# ✨ Features
+
+## 🕵️ MITM Interception
+
+### Transparent forwarding
+
+MIRAGE uses Linux IP forwarding and controlled firewall/sysctl configuration to allow intercepted traffic to continue through the host while traffic is analyzed.
+
+The framework creates a **transaction-owned firewall scope** instead of flushing the host firewall configuration.
+
+### ARP interception
+
+The ARP engine performs bidirectional poisoning between:
+
+```text
+Target
+  ↕
+MIRAGE
+  ↕
+Gateway
+```
+
+The engine also attempts to restore the ARP state when the session ends.
+
+---
+
+## 🔎 Network Reconnaissance
+
+MIRAGE integrates Nmap for LAN discovery.
+
+The scanner provides:
+
+* IPv4 address
+* MAC address
+* Vendor information
+* Hostname
+* Live host discovery
+
+Nmap XML output is parsed directly rather than relying on fragile human-readable output parsing.
+
+---
+
+## 📡 Real-Time Packet Analysis
+
+MIRAGE combines:
+
+```text
+tcpdump
+   +
+Scapy
+```
+
+for packet collection and live analysis.
+
+The dashboard can display:
+
+* Source IP
+* Destination IP
+* Source port
+* Destination port
+* Protocol
+* TCP flags
+* Packet length
+* ASCII payload
+* HEX payload
+
+Packets are processed through a bounded queue and delivered to the frontend in batches to reduce WebSocket and browser overhead.
+
+---
+
+## 📊 Live Traffic Monitoring
+
+The dashboard provides a real-time traffic graph showing:
+
+```text
+Download
+Upload
+```
+
+with rolling traffic statistics calculated from observed packets.
+
+Byte counters are protected using thread synchronization to avoid inconsistent statistics under concurrent packet processing.
+
+---
+
+## 🌐 Plaintext DNS Observation
+
+MIRAGE can observe plaintext DNS queries visible on the monitored traffic path.
+
+Example:
+
+```text
+example.com
+api.example.com
+cdn.example.net
+```
+
+Encrypted DNS mechanisms such as DoH and DoT are outside the visibility of a normal plaintext DNS packet monitor.
+
+---
+
+## 🔬 Packet Inspector
+
+Every captured packet can be opened in the built-in inspector.
+
+The interface provides:
+
+```text
+┌───────────────────────────────┐
+│ PACKET INSPECTOR              │
+├───────────────────────────────┤
+│ Source                        │
+│ Destination                   │
+│ Protocol                      │
+│ Ports                         │
+│ TCP Flags                     │
+│ Length                        │
+├───────────────────────────────┤
+│ Payload ASCII                 │
+├───────────────────────────────┤
+│ Payload HEX                   │
+└───────────────────────────────┘
+```
+
+Packet filtering and search are available directly from the dashboard.
+
+---
+
+## 🔐 Plaintext Credential Detection
+
+MIRAGE includes basic detection for credential-like fields visible inside plaintext HTTP POST traffic.
+
+Detected data can be written to the session log directory for authorized lab analysis.
+
+This capability is intentionally limited to traffic that is actually visible to the analyzer and does **not** bypass TLS encryption.
+
+---
+
+# 🏗️ Architecture
+
+MIRAGE uses a decoupled backend/frontend architecture.
+
+```text
+                           MIRAGE
+                              │
+              ┌───────────────┴───────────────┐
+              │                               │
+        FastAPI Backend                 Web Dashboard
+              │                               │
+              └───────────────┬───────────────┘
+                              │
+                      MirageController
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+       Scanner              Sniffer            ARP Engine
+          │                   │                   │
+         Nmap              Scapy               Scapy
+                              │
+                      Packet Processing
+                              │
+                       Bounded Queue
+                              │
+                           Batching
+                              │
+                         WebSocket
+                              │
+                              ▼
+                             UI
+```
+
+### Project structure
+
+```text
+MIRAGE/
+├── main.py
 ├── requirements.txt
+├── .env
+│
+├── core/
+│   ├── mitm.py
+│   ├── network.py
+│   └── sniffer.py
+│
 ├── static/
-│   └── index.html # Cyberpunk Web UI (Tailwind CSS + Vanilla JS)
-└── core/ # Backend Engine
-    ├── network.py # Nmap Network Scanner logic
-    ├── mitm.py # Stealth ARP Spoofer
-    └── sniffer.py # Packet Analyzer & Traffic Calculator
+│   ├── index.html
+│   └── tailwind.js
+│
+└── logs/
+```
+
+### Component responsibilities
+
+| Component           | Responsibility                                                            |
+| ------------------- | ------------------------------------------------------------------------- |
+| `main.py`           | FastAPI server, controller, WebSocket lifecycle, network state management |
+| `core/network.py`   | Nmap-based host discovery                                                 |
+| `core/mitm.py`      | ARP interception and ARP restoration                                      |
+| `core/sniffer.py`   | Packet capture, processing, traffic statistics, packet batching           |
+| `static/index.html` | Real-time dashboard and packet inspector                                  |
+
+---
+
+# 🔒 Network State Management
+
+One of the main engineering goals of MIRAGE is to avoid leaving the host in a modified network state after a failed or interrupted session.
+
+Before modifying networking configuration, MIRAGE creates a session-specific snapshot containing relevant:
+
+```text
+iptables
+sysctl values
+```
+
+The workflow is:
+
+```text
+Capture Snapshot
+       │
+       ▼
+Mark Transaction Active
+       │
+       ▼
+Apply Network Changes
+       │
+       ▼
+Start Engines
+       │
+       ▼
+MITM Session
+       │
+       ├──────────────┐
+       │              │
+      STOP         FAILURE
+       │              │
+       └──────┬───────┘
+              ▼
+       Restore Snapshot
+              │
+              ▼
+       Remove MIRAGE State
+              │
+              ▼
+             IDLE
+```
+
+The firewall configuration created by MIRAGE is transaction-owned and uses a unique chain name for each session.
+
+---
+
+# 🛡️ Reliability & Safety Engineering
+
+MIRAGE is built with several defensive mechanisms:
+
+### Transaction-aware network changes
+
+Network configuration is only mutated after a valid snapshot has been captured.
+
+### Fail-fast system commands
+
+System-level operations validate command exit codes and surface failures rather than silently continuing.
+
+### Failure-tolerant cleanup
+
+Scanner, sniffer, ARP engine, firewall state, and temporary session resources are cleaned independently so a failure in one component does not automatically prevent cleanup of another.
+
+### Controlled shutdown
+
+Long-running subprocesses such as Nmap and tcpdump have bounded shutdown paths with escalation when graceful termination fails.
+
+### Single-operator control
+
+Only one authenticated WebSocket operator can control a MIRAGE instance at a time.
+
+### Bounded packet buffering
+
+Packet queues are bounded to prevent unlimited in-memory growth during high traffic conditions.
+
+---
+
+# 🔑 Configuration
+
+MIRAGE supports an environment-based access token.
+
+Create a `.env` file in the project root:
+
+```env
+MIRAGE_ACCESS_TOKEN=your-secret-token
+```
+
+Generate a strong token with:
+
+```bash
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Never commit `.env` to Git.
+
+Your `.gitignore` should contain:
+
+```gitignore
+.env
+logs/
+__pycache__/
+*.pyc
 ```
 
 ---
 
-## 📦 Installation & Requirements
+# 📦 Installation
 
-### Prerequisites
-- Linux environment (Kali, Parrot, or Arch recommended)
-- Wireless/Wired card supporting **Promiscuous Mode**
-- Root privileges
+## Requirements
 
-### System Dependencies
-You must have the underlying CLI tools installed:
+Recommended environment:
+
+* Linux
+* Python 3.10+
+* Root privileges
+* Nmap
+* tcpdump
+* iptables
+* iproute2
+* Network interface capable of the required packet operations
+
+Kali Linux, Parrot OS, Debian, Ubuntu, and Arch-based environments are suitable starting points.
+
+### System dependencies
 
 ```bash
 sudo apt update
 sudo apt install nmap tcpdump iptables iproute2
 ```
 
-### Python Setup
+### Clone
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/mirage.git
-cd mirage
+git clone https://github.com/itsBONSAW/MIRAGE.git
+cd MIRAGE
+```
+
+### Python environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+If `.env` loading is handled by the application:
+
+```bash
+pip install python-dotenv
 ```
 
 ---
 
-## 💻 Usage
+# 🚀 Usage
 
-Run MIRAGE with root privileges:
+Start MIRAGE with the required privileges:
 
 ```bash
 sudo python3 main.py
 ```
 
-Once running, open your browser and navigate to:
-`http://localhost:9000`
+Then open:
 
-1. Select your network interface.
-2. Click **START SCAN** to discover hosts on the LAN.
-3. Click **INTERCEPT** on your target.
-4. Watch the traffic graph move and analyze packets in real-time!
+```text
+http://127.0.0.1:9000
+```
 
----
+For the initial authenticated browser session, provide the operator token through the interface/session mechanism configured by your deployment.
 
-## What's New in v2.0? (Major Update)
-### 🔒 WebSocket Authentication: Server connection now requires a security token to prevent unauthorized access within the local network.
+### Typical workflow
 
-### 🛡️ Crash & Race Condition Fix:
-Implemented asyncio.Lock to eliminate concurrent command interference, achieving 100% server stability.
-
-### ⚡ Zero UI Freezing:
-Stopping operations (Scan/MITM) is now handled in separate threads, ensuring the Web UI remains completely responsive at all times.
-
-### 🧵 Thread Safety Improvements:
-Replaced unsafe boolean flags with threading.Event for immediate and secure termination of network engines.
-
-### 🧹 Automatic Network Cleanup:
-If the WebSocket connection drops unexpectedly, the tool automatically stops all operations and restores network settings (iptables/sysctl).
-
-### 🐛 Transparent Error Handling:
-Removed silent except: blocks. All exceptions are now clearly logged in the dashboard for easier debugging.
-
-### 🚀 Processing Speed Boost:
-Removed unnecessary terminal logging for individual packets, significantly reducing CPU usage and improving performance under heavy traffic.
-
-### 📊 Accurate Traffic Calculation:
-Added threading.Lock to byte counters, ensuring 100% precise RX/TX speed calculations without data races.
-
-### 🐍 Modern FastAPI Standards:
-Migrated from the deprecated @app.on_event to the modern lifespan context manager for future-proof compatibility.
+```text
+1. Start MIRAGE
+2. Select a network interface
+3. Start reconnaissance
+4. Review discovered hosts
+5. Select an authorized test target
+6. Start interception
+7. Inspect live traffic
+8. Stop the session
+9. Verify network restoration
+```
 
 ---
 
-## 🤝 Acknowledgements
+# 🧪 Recommended Lab Setup
 
-I want to be completely transparent about the development process of MIRAGE. A significant portion of this tool's architecture, backend Python logic, and the cyberpunk-themed frontend were designed and written with the assistance of an AI language model. It acted as an incredible co-pilot, helping to debug complex threading issues, optimize the transparent bridge routing, and design the UI.
+For safe experimentation, use an isolated test environment such as:
 
-Thank you to the AI for making this project come to life so rapidly.
+```text
+                  ┌──────────────┐
+                  │ Test Router  │
+                  └──────┬───────┘
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+        MIRAGE Host             Test Device
+        Linux/Kali             Android/Windows
+```
+
+Keep the environment isolated from networks and systems you do not own or have explicit authorization to test.
+
+---
+
+# 🆕 What's New in v2.0
+
+## 🔐 WebSocket Authentication
+
+Control traffic now requires an authenticated operator token.
+
+---
+
+## 🧠 Centralized Controller
+
+Engine state has moved into a centralized `MirageController` rather than being owned independently by every WebSocket session.
+
+This reduces lifecycle conflicts and makes cleanup deterministic.
+
+---
+
+## 🔒 Transactional Network State
+
+Network configuration is now treated as a transaction:
+
+```text
+Snapshot
+→ Apply
+→ Run
+→ Restore
+```
+
+Failures during initialization trigger rollback paths instead of leaving the host in an assumed default state.
+
+---
+
+## 🛡️ Transaction-Owned Firewall
+
+MIRAGE no longer flushes the system firewall.
+
+Instead, every session receives its own uniquely named firewall chain.
+
+This isolates MIRAGE-managed rules from unrelated firewall configuration.
+
+---
+
+## 🧵 Concurrency Improvements
+
+Critical control operations are serialized using asyncio synchronization primitives.
+
+The application also uses thread synchronization for packet counters and packet buffering.
+
+---
+
+## ⚡ Improved Shutdown
+
+Nmap, tcpdump, Scapy capture, and background worker threads now have explicit shutdown paths and bounded termination behavior.
+
+---
+
+## 📦 Packet Batching
+
+Packets are queued and transmitted to the browser in batches instead of generating a WebSocket message for every packet.
+
+This significantly reduces frontend message overhead during busy captures.
+
+---
+
+## 🧹 Unified Cleanup
+
+Stopping a session, disconnecting the operator, changing interfaces, or shutting down the server all enter the same cleanup architecture.
+
+The goal is to restore the host's previous network configuration rather than assuming default values.
+
+---
+
+## 🐛 Better Error Handling
+
+Important system operations validate return codes and report failures instead of silently ignoring them.
+
+---
+
+# 🧭 Roadmap
+
+The current release focuses on reliable MITM lifecycle management and live packet analysis.
+
+Planned areas include:
+
+```text
+[ ] Automated regression tests
+[ ] Fault-injection test suite
+[ ] CI pipeline
+[ ] More protocol-aware analyzers
+[ ] Improved session/flow tracking
+[ ] IPv6-aware network handling
+[ ] Advanced BPF filtering
+[ ] Better packet stream backpressure
+[ ] Richer PCAP workflows
+[ ] Extended observability
+```
+
+---
+
+# 🧪 Testing Philosophy
+
+A core design goal of MIRAGE is that failure should be safe and observable.
+
+Important scenarios to test include:
+
+```text
+iptables-save failure
+sysctl snapshot failure
+firewall creation failure
+sysctl mutation failure
+tcpdump startup failure
+Nmap failure
+ARP engine failure
+WebSocket disconnect
+operator race
+interface change
+iptables restore failure
+process termination
+application shutdown
+```
+
+The key invariant is:
+
+```text
+Network State Before MIRAGE
+            =
+Network State After Cleanup
+```
+
+whenever rollback is able to complete successfully.
+
+---
+
+# 📸 Screenshots
+
+<div align="center">
+
+<img width="1920" alt="MIRAGE Dashboard" src="[https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd](https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd)" />
+
+<img width="1920" alt="MIRAGE Packet Analysis" src="[https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519](https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519)" />
+
+<img width="1920" alt="MIRAGE Live Monitoring" src="[https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287](https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287)" />
+
+</div>
+
+---
+
+# 🤝 Acknowledgements
+
+MIRAGE was developed with significant assistance from AI during the engineering process.
+
+AI assistance was used as a development co-pilot for areas including:
+
+* architecture design
+* debugging
+* concurrency reasoning
+* UI development
+* code review
+* refactoring
+* documentation
+
+The final project, integration decisions, testing, deployment, and engineering direction remain the responsibility of the project author.
+
+---
+
+# 📄 License
+
+MIRAGE is released under the MIT License.
+
+See:
+
+```text
+LICENSE
+```
+
+for the complete license text.
 
 ---
 
 <div align="center">
-<sub>Stay invisible. Happy Hacking.</sub>
+
+### M I R A G E
+
+**Observe. Intercept. Analyze. Recover.**
+
+<sub>Built for authorized security research and network analysis.</sub>
+
 </div>

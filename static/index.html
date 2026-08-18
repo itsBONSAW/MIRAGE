@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIRAGE - MITM Framework</title>
     <script src="/static/tailwind.js"></script>
+
     <style>
         :root {
             --neon-purple: #BD00FF;
@@ -14,446 +15,2017 @@
             --neon-yellow: #FFD600;
             --bg-dark: #050507;
         }
+
         body {
             font-family: 'DejaVu Sans Mono', 'Liberation Mono', 'Consolas', monospace;
             background-color: var(--bg-dark);
-            background-image: 
+            background-image:
                 linear-gradient(rgba(189, 0, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
             overflow: hidden;
         }
-        .glass-panel { background: rgba(10, 10, 12, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
-        .neon-purple { color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); }
-        .neon-green { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
-        .neon-cyan { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
-        .custom-scroll::-webkit-scrollbar { width: 4px; } .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0); } .custom-scroll::-webkit-scrollbar-thumb { background: var(--neon-purple); opacity: 0.5; border-radius: 2px; }
-        .target-row { transition: all 0.2s ease; border-left: 2px solid transparent; }
-        .target-row:hover { background-color: rgba(189, 0, 255, 0.05); border-left: 2px solid var(--neon-purple); }
-        .btn-cyber { transition: all 0.3s ease; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        .btn-cyber:hover { transform: translateY(-1px); box-shadow: 0 0 15px currentColor; }
-        .btn-cyber:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
-        .btn-start { background-color: var(--neon-purple); color: #fff; }
-        .btn-stop { background-color: var(--neon-red); color: #fff; }
-        .btn-intercept { background-color: rgba(255, 0, 60, 0.2); color: var(--neon-red); border: 1px solid var(--neon-red); font-size: 10px; padding: 4px 12px; }
-        .btn-intercept-active { background-color: var(--neon-red); color: #fff; border: 1px solid var(--neon-red); font-size: 10px; padding: 4px 12px; }
-        .btn-disabled-fake { opacity: 0.5; cursor: not-allowed; }
-        
-        select { padding: 0 10px !important; margin: 0 !important; line-height: 1.5 !important; }
-        
-        .crt::before {
-            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+
+        .glass-panel {
+            background: rgba(10, 10, 12, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        
-        .pkt-tab { padding: 2px 8px; border-radius: 4px; cursor: pointer; color: #666; }
-        .pkt-tab.active { background: rgba(189, 0, 255, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-        .pkt-line { padding: 2px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pkt-line:hover { background: rgba(189, 0, 255, 0.1); }
-        .pkt-URL { color: var(--neon-cyan); }
-        .pkt-TCP { color: var(--neon-green); }
-        .pkt-UDP { color: var(--neon-purple); }
-        .pkt-ICMP { color: var(--neon-yellow); }
-        .pkt-CRITICAL { color: var(--neon-red); font-weight: bold; }
-        
-        .modal-bg { background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+
+        .neon-purple {
+            color: var(--neon-purple);
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .neon-green {
+            color: var(--neon-green);
+            text-shadow: 0 0 8px var(--neon-green);
+        }
+
+        .neon-cyan {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 2px;
+        }
+
+        .target-row {
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+
+        .target-row:hover {
+            background-color: rgba(189, 0, 255, 0.05);
+            border-left: 2px solid var(--neon-purple);
+        }
+
+        .btn-cyber {
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .btn-cyber:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-start {
+            background-color: var(--neon-purple);
+            color: #fff;
+        }
+
+        .btn-stop {
+            background-color: var(--neon-red);
+            color: #fff;
+        }
+
+        .btn-intercept {
+            background-color: rgba(255, 0, 60, 0.2);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            font-size: 10px;
+            padding: 4px 12px;
+        }
+
+        .btn-intercept-active {
+            background-color: var(--neon-red);
+            color: #fff;
+            border: 1px solid var(--neon-red);
+            font-size: 10px;
+            padding: 4px 12px;
+        }
+
+        .btn-disabled-fake {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        select {
+            padding: 0 10px !important;
+            margin: 0 !important;
+            line-height: 1.5 !important;
+        }
+
+        .crt::before {
+            content: "";
+            display: block;
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    rgba(18, 16, 16, 0) 50%,
+                    rgba(0, 0, 0, 0.25) 50%
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 0, 0, 0.06),
+                    rgba(0, 255, 0, 0.02),
+                    rgba(0, 0, 255, 0.06)
+                );
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .pkt-tab {
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .pkt-tab.active {
+            background: rgba(189, 0, 255, 0.2);
+            color: var(--neon-purple);
+            border: 1px solid var(--neon-purple);
+        }
+
+        .pkt-line {
+            padding: 2px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pkt-line:hover {
+            background: rgba(189, 0, 255, 0.1);
+        }
+
+        .pkt-URL {
+            color: var(--neon-cyan);
+        }
+
+        .pkt-TCP {
+            color: var(--neon-green);
+        }
+
+        .pkt-UDP {
+            color: var(--neon-purple);
+        }
+
+        .pkt-ICMP {
+            color: var(--neon-yellow);
+        }
+
+        .pkt-CRITICAL {
+            color: var(--neon-red);
+            font-weight: bold;
+        }
+
+        .modal-bg {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .status-dot {
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
+
 <body class="text-gray-300 h-screen flex flex-col overflow-hidden">
 
-    <!-- Packet Details Modal -->
-    <div id="packet-modal" class="fixed inset-0 modal-bg z-50 hidden flex items-center justify-center p-4">
+    <div
+        id="packet-modal"
+        class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4"
+    >
         <div class="glass-panel w-full max-w-3xl max-h-[80vh] flex flex-col rounded-lg border border-purple-500">
             <div class="p-3 border-b border-gray-700 flex justify-between items-center bg-black/40">
-                <h3 class="text-sm font-bold text-purple-400" style="text-shadow: 0 0 5px var(--neon-purple);">PACKET INSPECTOR</h3>
-                <button onclick="closeModal()" class="text-red-400 hover:text-red-300 text-xs font-bold">[ X ] CLOSE</button>
+                <h3
+                    class="text-sm font-bold text-purple-400"
+                    style="text-shadow: 0 0 5px var(--neon-purple);"
+                >
+                    PACKET INSPECTOR
+                </h3>
+                <button
+                    id="close-modal"
+                    class="text-red-400 hover:text-red-300 text-xs font-bold"
+                    type="button"
+                >
+                    [ X ] CLOSE
+                </button>
             </div>
-            <div id="modal-content" class="p-4 overflow-y-auto custom-scroll text-xs space-y-4">
-                <!-- Injected by JS -->
-            </div>
+
+            <div
+                id="modal-content"
+                class="p-4 overflow-y-auto custom-scroll text-xs space-y-4"
+            ></div>
         </div>
     </div>
 
     <header class="glass-panel border-b border-gray-800 p-3 flex justify-between items-center z-30">
         <div class="flex items-center space-x-4">
-            <h1 class="text-2xl font-black text-white tracking-widest" style="font-family: 'Arial Black', sans-serif; text-shadow: 0 0 10px rgba(189, 0, 255, 0.8);">MIRAGE</h1>
-            <span class="text-xs text-gray-500 tracking-widest hidden sm:block">MITM INTERCEPTION & ANALYTICAL ENGINE</span>
+            <h1
+                class="text-2xl font-black text-white tracking-widest"
+                style="font-family: 'Arial Black', sans-serif; text-shadow: 0 0 10px rgba(189, 0, 255, 0.8);"
+            >
+                MIRAGE
+            </h1>
+
+            <span class="text-xs text-gray-500 tracking-widest hidden sm:block">
+                MITM INTERCEPTION & ANALYTICAL ENGINE
+            </span>
         </div>
+
         <div class="flex items-center space-x-4 text-xs font-bold">
             <div class="glass-panel px-3 py-1 rounded-full flex items-center space-x-2">
                 <span class="text-gray-500">IFACE:</span>
-                <select id="interface-select" class="bg-transparent text-purple-400 focus:outline-none cursor-pointer appearance-none"></select>
+
+                <select
+                    id="interface-select"
+                    class="bg-transparent text-purple-400 focus:outline-none cursor-pointer appearance-none"
+                ></select>
             </div>
+
             <div class="flex items-center space-x-2 glass-panel px-3 py-1 rounded-full">
-                <div id="status-dot" class="w-2 h-2 rounded-full bg-gray-600"></div>
-                <span id="status-text" class="text-gray-500">IDLE</span>
+                <div
+                    id="status-dot"
+                    class="status-dot w-2 h-2 rounded-full bg-gray-600"
+                ></div>
+
+                <span id="status-text" class="text-gray-500">
+                    DISCONNECTED
+                </span>
             </div>
         </div>
     </header>
 
     <div class="flex-1 flex p-3 overflow-hidden gap-3">
-        
-        <!-- Left Column (60%) -->
+
         <div class="w-3/5 flex flex-col gap-3 h-full">
-            
-            <!-- Top: Hosts Table -->
+
             <div class="flex-1 glass-panel rounded-lg overflow-hidden flex flex-col min-h-0">
                 <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-black/20">
-                    <h2 class="text-sm text-gray-400 tracking-wider" style="font-family: 'Arial Black', sans-serif;">DISCOVERED HOSTS</h2>
+                    <h2
+                        class="text-sm text-gray-400 tracking-wider"
+                        style="font-family: 'Arial Black', sans-serif;"
+                    >
+                        DISCOVERED HOSTS
+                    </h2>
+
                     <div class="flex space-x-2">
-                        <button id="btn-start" class="btn-cyber btn-start px-6 py-1 text-xs">START SCAN</button>
-                        <button id="btn-stop" class="btn-cyber btn-stop px-6 py-1 text-xs btn-disabled-fake">STOP</button>
+                        <button
+                            id="btn-start"
+                            class="btn-cyber btn-start px-6 py-1 text-xs"
+                            type="button"
+                        >
+                            START SCAN
+                        </button>
+
+                        <button
+                            id="btn-stop"
+                            class="btn-cyber btn-stop px-6 py-1 text-xs btn-disabled-fake"
+                            type="button"
+                        >
+                            STOP
+                        </button>
                     </div>
                 </div>
+
                 <div class="flex-1 overflow-auto custom-scroll">
                     <table class="w-full text-xs">
                         <thead class="bg-black/50 sticky top-0 text-gray-500 backdrop-blur-sm">
                             <tr class="border-b border-gray-800">
-                                <th class="p-2 text-left tracking-widest text-[10px]">IP ADDRESS</th>
-                                <th class="p-2 text-left tracking-widest text-[10px]">HOSTNAME</th>
-                                <th class="p-2 text-left tracking-widest text-[10px]">VENDOR</th>
-                                <th class="p-2 text-center tracking-widest text-[10px]">ACTION</th>
+                                <th class="p-2 text-left tracking-widest text-[10px]">
+                                    IP ADDRESS
+                                </th>
+                                <th class="p-2 text-left tracking-widest text-[10px]">
+                                    HOSTNAME
+                                </th>
+                                <th class="p-2 text-left tracking-widest text-[10px]">
+                                    VENDOR
+                                </th>
+                                <th class="p-2 text-center tracking-widest text-[10px]">
+                                    ACTION
+                                </th>
                             </tr>
                         </thead>
-                        <tbody id="hosts-body" class="text-gray-300">
-                            <tr><td colspan="4" class="p-8 text-center text-gray-500">Awaiting network scan...</td></tr>
+
+                        <tbody
+                            id="hosts-body"
+                            class="text-gray-300"
+                        >
+                            <tr>
+                                <td
+                                    colspan="4"
+                                    class="p-8 text-center text-gray-500"
+                                >
+                                    Awaiting network scan...
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Bottom: Packet Inspector -->
             <div class="flex-1 glass-panel rounded-lg overflow-hidden flex flex-col min-h-0">
                 <div class="p-2 border-b border-gray-800 flex justify-between items-center bg-black/20">
                     <div class="flex space-x-1 text-[10px] font-bold">
-                        <div class="pkt-tab active" data-filter="ALL">ALL</div>
-                        <div class="pkt-tab" data-filter="URL">URL</div>
-                        <div class="pkt-tab" data-filter="TCP">TCP</div>
-                        <div class="pkt-tab" data-filter="UDP">UDP</div>
-                        <div class="pkt-tab" data-filter="ICMP">ICMP</div>
+                        <div
+                            class="pkt-tab active"
+                            data-filter="ALL"
+                        >
+                            ALL
+                        </div>
+
+                        <div
+                            class="pkt-tab"
+                            data-filter="DNS"
+                        >
+                            DNS
+                        </div>
+
+                        <div
+                            class="pkt-tab"
+                            data-filter="TCP"
+                        >
+                            TCP
+                        </div>
+
+                        <div
+                            class="pkt-tab"
+                            data-filter="UDP"
+                        >
+                            UDP
+                        </div>
+
+                        <div
+                            class="pkt-tab"
+                            data-filter="ICMP"
+                        >
+                            ICMP
+                        </div>
                     </div>
-                    <input id="pkt-search" type="text" placeholder="Search packets..." class="bg-black/40 text-[10px] px-2 py-1 rounded border border-gray-700 focus:outline-none focus:border-purple-500 w-40">
+
+                    <input
+                        id="pkt-search"
+                        type="text"
+                        placeholder="Search packets..."
+                        autocomplete="off"
+                        class="bg-black/40 text-[10px] px-2 py-1 rounded border border-gray-700 focus:outline-none focus:border-purple-500 w-40"
+                    >
                 </div>
-                <div id="packet-viewer" class="flex-1 p-2 text-[11px] overflow-y-auto custom-scroll">
-> No packets captured yet...
+
+                <div
+                    id="packet-viewer"
+                    class="flex-1 p-2 text-[11px] overflow-y-auto custom-scroll"
+                >
+                    <div class="text-gray-600">
+                        > No packets captured yet...
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column (40%) -->
         <div class="w-2/5 flex flex-col gap-3 h-full">
-            
-            <!-- Traffic Graph Panel -->
+
             <div class="glass-panel rounded-lg p-3 h-48 flex flex-col flex-shrink-0">
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-sm text-gray-400 tracking-wider" style="font-family: 'Arial Black', sans-serif;">LIVE TRAFFIC</h2>
+                    <h2
+                        class="text-sm text-gray-400 tracking-wider"
+                        style="font-family: 'Arial Black', sans-serif;"
+                    >
+                        LIVE TRAFFIC
+                    </h2>
+
                     <div class="flex space-x-4 text-[10px] font-bold">
-                        <span class="text-cyan-400">▼ DL: <span id="rx-speed">0.0</span> KB/s</span>
-                        <span class="text-purple-400">▲ UL: <span id="tx-speed">0.0</span> KB/s</span>
+                        <span class="text-cyan-400">
+                            ▼ DL:
+                            <span id="rx-speed">0.0</span>
+                            KB/s
+                        </span>
+
+                        <span class="text-purple-400">
+                            ▲ UL:
+                            <span id="tx-speed">0.0</span>
+                            KB/s
+                        </span>
                     </div>
                 </div>
-                <canvas id="traffic-canvas" class="w-full flex-1 bg-black/40 rounded"></canvas>
+
+                <canvas
+                    id="traffic-canvas"
+                    class="w-full flex-1 bg-black/40 rounded"
+                ></canvas>
             </div>
 
-            <!-- Live Console -->
             <div class="flex-1 glass-panel rounded-lg overflow-hidden relative crt min-h-0">
                 <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-black/20">
-                    <h2 class="text-sm text-gray-400 tracking-wider" style="font-family: 'Arial Black', sans-serif;">LIVE CONSOLE</h2>
+                    <h2
+                        class="text-sm text-gray-400 tracking-wider"
+                        style="font-family: 'Arial Black', sans-serif;"
+                    >
+                        LIVE CONSOLE
+                    </h2>
                 </div>
-                <div id="console-output" class="p-3 text-xs neon-green whitespace-pre-wrap text-left h-full overflow-y-auto custom-scroll">
-> MIRAGE Engine Initialized.<br>
-> Select interface and start scanning.<br>
+
+                <div
+                    id="console-output"
+                    class="p-3 text-xs neon-green whitespace-pre-wrap text-left h-full overflow-y-auto custom-scroll"
+                >
+                    <div>> MIRAGE Engine Initialized.</div>
+                    <div>> Establishing secure operator channel...</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const ws = new WebSocket("ws://localhost:9000/ws?token=V$j(Vqm,}XF,9i_|HZtL");
-        const consoleOutput = document.getElementById('console-output');
-        const packetViewer = document.getElementById('packet-viewer');
-        const pktSearch = document.getElementById('pkt-search');
-        let mitmTarget = null;
+        "use strict";
 
-        let packetDB = [];
-        let activeFilter = "ALL";
-        let searchQuery = "";
+        const state = {
+            socket: null,
+            reconnectTimer: null,
+            reconnectAttempts: 0,
+            selectedInterface: null,
+            scanActive: false,
+            mitmTarget: null,
+            packetDB: [],
+            activeFilter: "ALL",
+            searchQuery: "",
+            trafficData: [],
+            trafficFrame: null
+        };
 
-        function renderPackets() {
-            const filtered = packetDB.filter(p => {
-                const matchType = (activeFilter === "ALL" || p.type === activeFilter);
-                const matchSearch = p.summary.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchType && matchSearch;
-            });
+        const elements = {
+            consoleOutput: document.getElementById("console-output"),
+            packetViewer: document.getElementById("packet-viewer"),
+            packetSearch: document.getElementById("pkt-search"),
+            packetModal: document.getElementById("packet-modal"),
+            modalContent: document.getElementById("modal-content"),
+            closeModal: document.getElementById("close-modal"),
+            interfaceSelect: document.getElementById("interface-select"),
+            hostsBody: document.getElementById("hosts-body"),
+            statusText: document.getElementById("status-text"),
+            statusDot: document.getElementById("status-dot"),
+            startScan: document.getElementById("btn-start"),
+            stopScan: document.getElementById("btn-stop"),
+            rxSpeed: document.getElementById("rx-speed"),
+            txSpeed: document.getElementById("tx-speed"),
+            canvas: document.getElementById("traffic-canvas")
+        };
 
-            if (filtered.length === 0) {
-                packetViewer.innerHTML = '> No matching packets found.';
+        const canvasContext = elements.canvas.getContext("2d");
+
+        function escapeText(value) {
+            return String(value ?? "");
+        }
+
+        function setStatus(
+            text,
+            textClass,
+            dotClass
+        ) {
+            elements.statusText.textContent = text;
+            elements.statusText.className = textClass;
+            elements.statusDot.className =
+                `status-dot w-2 h-2 rounded-full ${dotClass}`;
+        }
+
+        function logMessage(message) {
+            const line = document.createElement("div");
+            line.textContent = `> ${escapeText(message)}`;
+            elements.consoleOutput.appendChild(line);
+
+            while (
+                elements.consoleOutput.children.length > 300
+            ) {
+                elements.consoleOutput.removeChild(
+                    elements.consoleOutput.firstChild
+                );
+            }
+
+            elements.consoleOutput.scrollTop =
+                elements.consoleOutput.scrollHeight;
+        }
+
+        function sendCommand(payload) {
+            if (
+                !state.socket ||
+                state.socket.readyState !== WebSocket.OPEN
+            ) {
+                logMessage(
+                    "WebSocket is not connected."
+                );
+                return false;
+            }
+
+            state.socket.send(
+                JSON.stringify(payload)
+            );
+
+            return true;
+        }
+
+        function resetOperatorState() {
+            state.mitmTarget = null;
+            state.scanActive = false;
+
+            elements.startScan.classList.remove(
+                "btn-disabled-fake"
+            );
+
+            elements.stopScan.classList.add(
+                "btn-disabled-fake"
+            );
+
+            elements.startScan.disabled = false;
+            elements.stopScan.disabled = false;
+
+            document
+                .querySelectorAll(".intercept-btn")
+                .forEach((button) => {
+                    button.classList.remove(
+                        "btn-intercept-active"
+                    );
+
+                    button.classList.add(
+                        "btn-intercept"
+                    );
+
+                    button.textContent =
+                        "INTERCEPT";
+                });
+        }
+
+        function connectWebSocket() {
+            const token = sessionStorage.getItem(
+                "mirage_operator_token"
+            );
+
+            if (!token) {
+                setStatus(
+                    "NO TOKEN",
+                    "text-yellow-400",
+                    "bg-yellow-500"
+                );
+
+                logMessage(
+                    "Operator token is not available."
+                );
+
                 return;
             }
 
-            const toRender = filtered.slice(-200);
-            packetViewer.innerHTML = '';
-            toRender.forEach(p => {
-                const div = document.createElement('div');
-                div.className = `pkt-line pkt-${p.type}`;
-                div.innerText = p.summary;
-                div.onclick = () => showPacketDetails(p.id);
-                packetViewer.appendChild(div);
-            });
-            packetViewer.scrollTop = packetViewer.scrollHeight;
+            const protocol =
+                window.location.protocol === "https:"
+                    ? "wss"
+                    : "ws";
+
+            const socketUrl =
+                `${protocol}://${window.location.host}/ws?token=${encodeURIComponent(token)}`;
+
+            const socket = new WebSocket(
+                socketUrl
+            );
+
+            state.socket = socket;
+
+            setStatus(
+                "CONNECTING",
+                "text-yellow-400",
+                "bg-yellow-500"
+            );
+
+            socket.addEventListener(
+                "open",
+                () => {
+                    state.reconnectAttempts = 0;
+
+                    setStatus(
+                        "READY",
+                        "text-green-400",
+                        "bg-green-500"
+                    );
+
+                    logMessage(
+                        "Secure operator channel established."
+                    );
+                }
+            );
+
+            socket.addEventListener(
+                "message",
+                handleMessage
+            );
+
+            socket.addEventListener(
+                "close",
+                () => {
+                    resetOperatorState();
+
+                    setStatus(
+                        "DISCONNECTED",
+                        "text-gray-500",
+                        "bg-gray-600"
+                    );
+
+                    scheduleReconnect();
+                }
+            );
+
+            socket.addEventListener(
+                "error",
+                () => {
+                    setStatus(
+                        "ERROR",
+                        "text-red-400",
+                        "bg-red-500"
+                    );
+                }
+            );
+        }
+
+        function scheduleReconnect() {
+            if (
+                state.reconnectTimer !== null
+                || sessionStorage.getItem(
+                    "mirage_operator_token"
+                ) === null
+            ) {
+                return;
+            }
+
+            const delay = Math.min(
+                1000 * (
+                    2 ** state.reconnectAttempts
+                ),
+                10000
+            );
+
+            state.reconnectAttempts += 1;
+
+            state.reconnectTimer = window.setTimeout(
+                () => {
+                    state.reconnectTimer = null;
+                    connectWebSocket();
+                },
+                delay
+            );
+        }
+
+        function handleMessage(event) {
+            let message;
+
+            try {
+                message = JSON.parse(
+                    event.data
+                );
+            } catch {
+                logMessage(
+                    "Received malformed server message."
+                );
+                return;
+            }
+
+            if (
+                message.type === "log"
+            ) {
+                logMessage(
+                    message.message
+                );
+                return;
+            }
+
+            if (
+                message.type === "error"
+            ) {
+                logMessage(
+                    `[SERVER] ${message.message}`
+                );
+                return;
+            }
+
+            if (
+                message.type === "packet"
+            ) {
+                if (
+                    Array.isArray(message.data)
+                ) {
+                    message.data.forEach(
+                        (packet) => {
+                            if (
+                                packet &&
+                                typeof packet === "object"
+                            ) {
+                                state.packetDB.push(
+                                    packet
+                                );
+                            }
+                        }
+                    );
+                }
+
+                if (
+                    state.packetDB.length > 5000
+                ) {
+                    state.packetDB.splice(
+                        0,
+                        state.packetDB.length - 5000
+                    );
+                }
+
+                renderPackets();
+                return;
+            }
+
+            if (
+                message.type === "hosts"
+            ) {
+                renderHosts(
+                    Array.isArray(message.data)
+                        ? message.data
+                        : []
+                );
+                return;
+            }
+
+            if (
+                message.type === "traffic"
+            ) {
+                const rx =
+                    Number(message.rx) || 0;
+
+                const tx =
+                    Number(message.tx) || 0;
+
+                elements.rxSpeed.textContent =
+                    rx.toFixed(1);
+
+                elements.txSpeed.textContent =
+                    tx.toFixed(1);
+
+                state.trafficData.push({
+                    time: performance.now(),
+                    rx,
+                    tx
+                });
+
+                trimTrafficData();
+                return;
+            }
+
+            updateStateFromLog(
+                message
+            );
+        }
+
+        function updateStateFromLog(message) {
+            const text = String(
+                message.message ?? ""
+            ).toLowerCase();
+
+            if (
+                text.includes(
+                    "network scan stopped"
+                )
+            ) {
+                state.scanActive = false;
+
+                elements.startScan.classList.remove(
+                    "btn-disabled-fake"
+                );
+
+                elements.stopScan.classList.add(
+                    "btn-disabled-fake"
+                );
+
+                if (
+                    !state.mitmTarget
+                ) {
+                    setStatus(
+                        "READY",
+                        "text-green-400",
+                        "bg-green-500"
+                    );
+                }
+            }
+
+            if (
+                text.includes(
+                    "scan complete"
+                )
+            ) {
+                state.scanActive = false;
+
+                elements.startScan.classList.remove(
+                    "btn-disabled-fake"
+                );
+
+                elements.stopScan.classList.add(
+                    "btn-disabled-fake"
+                );
+            }
+
+            if (
+                text.includes(
+                    "mitm session started"
+                )
+            ) {
+                setStatus(
+                    "INTERCEPTING",
+                    "text-red-400",
+                    "bg-red-500 animate-pulse"
+                );
+            }
+
+            if (
+                text.includes(
+                    "cleanup successful"
+                )
+                || text.includes(
+                    "network state restored"
+                )
+            ) {
+                state.mitmTarget = null;
+
+                document
+                    .querySelectorAll(
+                        ".intercept-btn"
+                    )
+                    .forEach((button) => {
+                        button.classList.remove(
+                            "btn-intercept-active"
+                        );
+
+                        button.classList.add(
+                            "btn-intercept"
+                        );
+
+                        button.textContent =
+                            "INTERCEPT";
+                    });
+
+                setStatus(
+                    "READY",
+                    "text-green-400",
+                    "bg-green-500"
+                );
+            }
+
+            if (
+                text.includes(
+                    "mitm start failed"
+                )
+                || text.includes(
+                    "cleanup completed with errors"
+                )
+            ) {
+                resetOperatorState();
+
+                setStatus(
+                    "ERROR",
+                    "text-red-400",
+                    "bg-red-500"
+                );
+            }
+        }
+
+        function renderPackets() {
+            const query =
+                state.searchQuery
+                    .trim()
+                    .toLowerCase();
+
+            const filtered =
+                state.packetDB.filter(
+                    (packet) => {
+                        const type =
+                            String(
+                                packet.type ?? ""
+                            ).toUpperCase();
+
+                        const summary =
+                            String(
+                                packet.summary ?? ""
+                            );
+
+                        const typeMatches =
+                            state.activeFilter === "ALL"
+                            || type === state.activeFilter
+                            || (
+                                state.activeFilter === "DNS"
+                                && type === "UDP"
+                                && (
+                                    summary.includes(
+                                        ":53"
+                                    )
+                                )
+                            );
+
+                        const searchMatches =
+                            !query
+                            || summary
+                                .toLowerCase()
+                                .includes(query)
+                            || String(
+                                packet.src_ip ?? ""
+                            )
+                                .toLowerCase()
+                                .includes(query)
+                            || String(
+                                packet.dst_ip ?? ""
+                            )
+                                .toLowerCase()
+                                .includes(query);
+
+                        return (
+                            typeMatches
+                            && searchMatches
+                        );
+                    }
+                );
+
+            const visible =
+                filtered.slice(-250);
+
+            elements.packetViewer.replaceChildren();
+
+            if (
+                visible.length === 0
+            ) {
+                const empty =
+                    document.createElement("div");
+
+                empty.className =
+                    "text-gray-600";
+
+                empty.textContent =
+                    "> No matching packets found.";
+
+                elements.packetViewer.appendChild(
+                    empty
+                );
+
+                return;
+            }
+
+            visible.forEach(
+                (packet) => {
+                    const row =
+                        document.createElement("div");
+
+                    const type =
+                        String(
+                            packet.type ?? "IP"
+                        ).toUpperCase();
+
+                    row.className =
+                        `pkt-line pkt-${type}`;
+
+                    row.textContent =
+                        String(
+                            packet.summary ?? "Unknown packet"
+                        );
+
+                    row.addEventListener(
+                        "click",
+                        () => {
+                            showPacketDetails(
+                                packet.id
+                            );
+                        }
+                    );
+
+                    elements.packetViewer.appendChild(
+                        row
+                    );
+                }
+            );
+
+            elements.packetViewer.scrollTop =
+                elements.packetViewer.scrollHeight;
+        }
+
+        function addDetailRow(
+            container,
+            title,
+            value,
+            valueClass
+        ) {
+            const wrapper =
+                document.createElement("div");
+
+            wrapper.className =
+                "bg-black/40 p-2 rounded border border-gray-700";
+
+            const label =
+                document.createElement("span");
+
+            label.className =
+                "text-gray-500 text-[10px]";
+
+            label.textContent = title;
+
+            const content =
+                document.createElement("div");
+
+            content.className =
+                `${valueClass} mt-1 break-all`;
+
+            content.textContent =
+                String(value ?? "N/A");
+
+            wrapper.append(
+                label,
+                content
+            );
+
+            container.appendChild(
+                wrapper
+            );
         }
 
         function showPacketDetails(id) {
-            const pkt = packetDB.find(p => p.id === id);
-            if (!pkt) return;
-            
-            const modalContent = document.getElementById('modal-content');
-            let html = `
-                <div class="mb-4">
-                    <span class="text-gray-500 text-[10px]">SUMMARY</span>
-                    <div class="text-cyan-400 mt-1">${pkt.summary}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-black/40 p-2 rounded border border-gray-700">
-                        <span class="text-gray-500 text-[10px]">SOURCE</span>
-                        <div class="text-green-400 mt-1">${pkt.src_ip} <span class="text-gray-500">:${pkt.src_port || 'N/A'}</span></div>
-                    </div>
-                    <div class="bg-black/40 p-2 rounded border border-gray-700">
-                        <span class="text-gray-500 text-[10px]">DESTINATION</span>
-                        <div class="text-purple-400 mt-1">${pkt.dst_ip} <span class="text-gray-500">:${pkt.dst_port || 'N/A'}</span></div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-4 mb-4 text-center">
-                    <div class="bg-black/40 p-2 rounded border border-gray-700">
-                        <span class="text-gray-500 text-[10px]">PROTOCOL</span>
-                        <div class="text-yellow-400 mt-1">${pkt.type}</div>
-                    </div>
-                    <div class="bg-black/40 p-2 rounded border border-gray-700">
-                        <span class="text-gray-500 text-[10px]">LENGTH</span>
-                        <div class="text-white mt-1">${pkt.length} Bytes</div>
-                    </div>
-                    <div class="bg-black/40 p-2 rounded border border-gray-700">
-                        <span class="text-gray-500 text-[10px]">FLAGS</span>
-                        <div class="text-white mt-1">${pkt.flags || 'N/A'}</div>
-                    </div>
-                </div>
-            `;
+            const packet =
+                state.packetDB.find(
+                    (item) =>
+                        item.id === id
+                );
 
-            if (pkt.payload_ascii && pkt.payload_ascii.trim().length > 0) {
-                html += `
-                    <div class="mt-4">
-                        <span class="text-gray-500 text-[10px]">PAYLOAD (ASCII)</span>
-                        <pre class="bg-black/60 p-2 rounded mt-1 text-green-400 whitespace-pre-wrap break-all border border-gray-700">${pkt.payload_ascii}</pre>
-                    </div>
-                `;
+            if (!packet) {
+                return;
             }
 
-            if (pkt.payload_hex && pkt.payload_hex.trim().length > 0) {
-                html += `
-                    <div class="mt-4">
-                        <span class="text-gray-500 text-[10px]">PAYLOAD (HEX)</span>
-                        <pre class="bg-black/60 p-2 rounded mt-1 text-purple-400 whitespace-pre-wrap break-all border border-gray-700">${pkt.payload_hex}</pre>
-                    </div>
-                `;
+            elements.modalContent.replaceChildren();
+
+            const summarySection =
+                document.createElement("div");
+
+            summarySection.className =
+                "mb-4";
+
+            const summaryLabel =
+                document.createElement("span");
+
+            summaryLabel.className =
+                "text-gray-500 text-[10px]";
+
+            summaryLabel.textContent =
+                "SUMMARY";
+
+            const summary =
+                document.createElement("div");
+
+            summary.className =
+                "text-cyan-400 mt-1 break-all";
+
+            summary.textContent =
+                packet.summary ?? "N/A";
+
+            summarySection.append(
+                summaryLabel,
+                summary
+            );
+
+            elements.modalContent.appendChild(
+                summarySection
+            );
+
+            const endpoints =
+                document.createElement("div");
+
+            endpoints.className =
+                "grid grid-cols-2 gap-4 mb-4";
+
+            addDetailRow(
+                endpoints,
+                "SOURCE",
+                `${packet.src_ip ?? "N/A"} : ${packet.src_port || "N/A"}`,
+                "text-green-400"
+            );
+
+            addDetailRow(
+                endpoints,
+                "DESTINATION",
+                `${packet.dst_ip ?? "N/A"} : ${packet.dst_port || "N/A"}`,
+                "text-purple-400"
+            );
+
+            elements.modalContent.appendChild(
+                endpoints
+            );
+
+            const metadata =
+                document.createElement("div");
+
+            metadata.className =
+                "grid grid-cols-3 gap-4 mb-4 text-center";
+
+            addDetailRow(
+                metadata,
+                "PROTOCOL",
+                packet.type,
+                "text-yellow-400"
+            );
+
+            addDetailRow(
+                metadata,
+                "LENGTH",
+                `${packet.length ?? "N/A"} Bytes`,
+                "text-white"
+            );
+
+            addDetailRow(
+                metadata,
+                "FLAGS",
+                packet.flags || "N/A",
+                "text-white"
+            );
+
+            elements.modalContent.appendChild(
+                metadata
+            );
+
+            if (
+                packet.payload_ascii
+                && String(
+                    packet.payload_ascii
+                ).trim()
+            ) {
+                createPayloadSection(
+                    "PAYLOAD (ASCII)",
+                    packet.payload_ascii,
+                    "text-green-400"
+                );
             }
 
-            modalContent.innerHTML = html;
-            document.getElementById('packet-modal').classList.remove('hidden');
-            document.getElementById('packet-modal').classList.add('flex');
+            if (
+                packet.payload_hex
+                && String(
+                    packet.payload_hex
+                ).trim()
+            ) {
+                createPayloadSection(
+                    "PAYLOAD (HEX)",
+                    packet.payload_hex,
+                    "text-purple-400"
+                );
+            }
+
+            elements.packetModal.classList.remove(
+                "hidden"
+            );
+
+            elements.packetModal.classList.add(
+                "flex"
+            );
+        }
+
+        function createPayloadSection(
+            title,
+            value,
+            className
+        ) {
+            const section =
+                document.createElement("div");
+
+            section.className =
+                "mt-4";
+
+            const label =
+                document.createElement("span");
+
+            label.className =
+                "text-gray-500 text-[10px]";
+
+            label.textContent = title;
+
+            const pre =
+                document.createElement("pre");
+
+            pre.className =
+                `bg-black/60 p-2 rounded mt-1 whitespace-pre-wrap break-all border border-gray-700 ${className}`;
+
+            pre.textContent =
+                String(value);
+
+            section.append(
+                label,
+                pre
+            );
+
+            elements.modalContent.appendChild(
+                section
+            );
         }
 
         function closeModal() {
-            document.getElementById('packet-modal').classList.add('hidden');
-            document.getElementById('packet-modal').classList.remove('flex');
+            elements.packetModal.classList.add(
+                "hidden"
+            );
+
+            elements.packetModal.classList.remove(
+                "flex"
+            );
         }
 
-        document.querySelectorAll('.pkt-tab').forEach(tab => {
-            tab.onclick = () => {
-                document.querySelectorAll('.pkt-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                activeFilter = tab.getAttribute('data-filter');
-                renderPackets();
-            };
-        });
+        function renderHosts(hosts) {
+            elements.hostsBody.replaceChildren();
 
-        pktSearch.oninput = () => {
-            searchQuery = pktSearch.value;
-            renderPackets();
-        };
+            if (
+                hosts.length === 0
+            ) {
+                const row =
+                    document.createElement("tr");
 
-        // Smooth Traffic Graph Logic
-        const canvas = document.getElementById('traffic-canvas');
-        const ctx = canvas.getContext('2d');
-        let trafficData = [];
-        let targetRx = 0;
-        let targetTx = 0;
+                const cell =
+                    document.createElement("td");
 
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+                cell.colSpan = 4;
+                cell.className =
+                    "p-8 text-center text-gray-500";
 
-        function drawGraph() {
-            requestAnimationFrame(drawGraph);
-            const now = performance.now();
-            const pxPerSec = canvas.width / 60;
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.strokeStyle = 'rgba(189, 0, 255, 0.1)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < canvas.width; i += 20) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-            }
-            for (let i = 0; i < canvas.height; i += 20) {
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
-            }
+                cell.textContent =
+                    "No active hosts found.";
 
-            const maxVal = Math.max(...trafficData.map(p => Math.max(p.rx, p.tx)), 10);
-            const scale = (canvas.height - 10) / maxVal;
+                row.appendChild(cell);
+                elements.hostsBody.appendChild(row);
 
-            ctx.strokeStyle = '#00E5FF';
-            ctx.lineWidth = 2;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#00E5FF';
-            ctx.beginPath();
-            trafficData.forEach((p, i) => {
-                const x = canvas.width - ((now - p.time) / 1000) * pxPerSec;
-                const y = canvas.height - (p.rx * scale);
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
-
-            ctx.strokeStyle = '#BD00FF';
-            ctx.shadowColor = '#BD00FF';
-            ctx.beginPath();
-            trafficData.forEach((p, i) => {
-                const x = canvas.width - ((now - p.time) / 1000) * pxPerSec;
-                const y = canvas.height - (p.tx * scale);
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-        }
-        drawGraph();
-
-        async function loadInterfaces() {
-            const response = await fetch('/api/interfaces');
-            const data = await response.json();
-            const select = document.getElementById('interface-select');
-            select.innerHTML = '';
-            data.interfaces.filter(i => !i.startsWith("lo")).forEach(iface => {
-                const option = document.createElement('option');
-                option.value = iface;
-                option.innerText = iface;
-                if (iface === data.current) option.selected = true;
-                select.appendChild(option);
-            });
-        }
-        loadInterfaces();
-
-        document.getElementById('interface-select').onchange = (e) => {
-            ws.send(JSON.stringify({action: 'set_interface', interface: e.target.value}));
-        };
-
-        ws.onmessage = function(event) {
-            const msg = JSON.parse(event.data);
-            if (msg.type === 'log') {
-                consoleOutput.innerHTML += `> ${msg.message}<br>`;
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            } 
-            else if (msg.type === 'packet') {
-                packetDB.push(msg.data);
-                if (packetDB.length > 1000) packetDB.shift();
-                renderPackets();
-            }
-            else if (msg.type === 'hosts') {
-                renderHosts(msg.data);
-            }
-            else if (msg.type === 'traffic') {
-                document.getElementById('rx-speed').innerText = msg.rx;
-                document.getElementById('tx-speed').innerText = msg.tx;
-                trafficData.push({ time: performance.now(), rx: msg.rx, tx: msg.tx });
-                while (trafficData.length > 0 && performance.now() - trafficData[0].time > 60000) {
-                    trafficData.shift();
-                }
-            }
-        };
-
-        function renderHosts(data) {
-            const hostsBody = document.getElementById('hosts-body');
-            if (data.length === 0) {
-                hostsBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-500">No active hosts found.</td></tr>`;
                 return;
             }
-            hostsBody.innerHTML = '';
-            data.forEach(host => {
-                const tr = document.createElement('tr');
-                tr.className = 'target-row border-b border-gray-900/50';
-                tr.innerHTML = `
-                    <td class="p-2 font-bold text-white">${host.ip}</td>
-                    <td class="p-2 text-gray-400 text-[10px]">${host.hostname}</td>
-                    <td class="p-2 text-cyan-400 text-[10px]">${host.vendor}</td>
-                    <td class="p-2 text-center">
-                        <button onclick="toggleMitm('${host.ip}', '${host.mac}')" class="btn-cyber intercept-btn btn-intercept">INTERCEPT</button>
-                    </td>
-                `;
-                hostsBody.appendChild(tr);
-            });
+
+            hosts.forEach(
+                (host) => {
+                    const row =
+                        document.createElement("tr");
+
+                    row.className =
+                        "target-row border-b border-gray-900/50";
+
+                    const ipCell =
+                        document.createElement("td");
+
+                    ipCell.className =
+                        "p-2 font-bold text-white";
+
+                    ipCell.textContent =
+                        host.ip ?? "Unknown";
+
+                    const hostnameCell =
+                        document.createElement("td");
+
+                    hostnameCell.className =
+                        "p-2 text-gray-400 text-[10px]";
+
+                    hostnameCell.textContent =
+                        host.hostname ?? "Unknown";
+
+                    const vendorCell =
+                        document.createElement("td");
+
+                    vendorCell.className =
+                        "p-2 text-cyan-400 text-[10px]";
+
+                    vendorCell.textContent =
+                        host.vendor ?? "Unknown";
+
+                    const actionCell =
+                        document.createElement("td");
+
+                    actionCell.className =
+                        "p-2 text-center";
+
+                    const button =
+                        document.createElement("button");
+
+                    button.type = "button";
+                    button.className =
+                        "btn-cyber intercept-btn btn-intercept";
+                    button.textContent =
+                        state.mitmTarget === host.ip
+                            ? "STOP MITM"
+                            : "INTERCEPT";
+
+                    if (
+                        state.mitmTarget === host.ip
+                    ) {
+                        button.classList.remove(
+                            "btn-intercept"
+                        );
+
+                        button.classList.add(
+                            "btn-intercept-active"
+                        );
+                    }
+
+                    button.dataset.ip =
+                        String(host.ip ?? "");
+
+                    button.dataset.mac =
+                        String(host.mac ?? "");
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+                            toggleMitm(
+                                button.dataset.ip,
+                                button.dataset.mac,
+                                button
+                            );
+                        }
+                    );
+
+                    actionCell.appendChild(
+                        button
+                    );
+
+                    row.append(
+                        ipCell,
+                        hostnameCell,
+                        vendorCell,
+                        actionCell
+                    );
+
+                    elements.hostsBody.appendChild(
+                        row
+                    );
+                }
+            );
         }
 
-        window.toggleMitm = function(ip, mac) {
-            const buttons = document.querySelectorAll('.intercept-btn');
-            const clickedButton = event.target;
-
-            if (mitmTarget === ip) {
-                ws.send(JSON.stringify({action: 'stop_mitm'}));
-                mitmTarget = null;
-                clickedButton.classList.remove('btn-intercept-active');
-                clickedButton.classList.add('btn-intercept');
-                clickedButton.innerText = 'INTERCEPT';
-                document.getElementById('status-text').innerText = 'IDLE';
-                document.getElementById('status-text').className = 'text-gray-500';
-                document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-gray-600';
-            } else {
-                buttons.forEach(btn => {
-                    btn.classList.remove('btn-intercept-active');
-                    btn.classList.add('btn-intercept');
-                    btn.innerText = 'INTERCEPT';
-                });
-                
-                mitmTarget = ip;
-                clickedButton.classList.remove('btn-intercept');
-                clickedButton.classList.add('btn-intercept-active');
-                clickedButton.innerText = 'STOP MITM';
-                
-                ws.send(JSON.stringify({action: 'start_mitm', target_ip: ip, target_mac: mac}));
-                document.getElementById('status-text').innerText = 'INTERCEPTING';
-                document.getElementById('status-text').className = 'text-red-400';
-                document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
+        function toggleMitm(
+            ip,
+            mac,
+            button
+        ) {
+            if (
+                !ip
+                || !state.socket
+                || state.socket.readyState !== WebSocket.OPEN
+            ) {
+                return;
             }
-        };
 
-        document.getElementById('btn-start').onclick = () => {
-            ws.send(JSON.stringify({action: 'start_scan'}));
-            document.getElementById('status-text').innerText = 'SCANNING';
-            document.getElementById('status-text').className = 'text-purple-400';
-            document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-purple-500 animate-pulse';
-            document.getElementById('btn-start').classList.add('btn-disabled-fake');
-            document.getElementById('btn-stop').classList.remove('btn-disabled-fake');
-        };
+            if (
+                state.mitmTarget === ip
+            ) {
+                if (
+                    sendCommand({
+                        action: "stop_mitm"
+                    })
+                ) {
+                    state.mitmTarget = null;
 
-        document.getElementById('btn-stop').onclick = () => {
-            ws.send(JSON.stringify({action: 'stop_scan'}));
-            document.getElementById('status-text').innerText = 'IDLE';
-            document.getElementById('status-text').className = 'text-gray-500';
-            document.getElementById('status-dot').className = 'w-2 h-2 rounded-full bg-gray-600';
-            document.getElementById('btn-start').classList.remove('btn-disabled-fake');
-            document.getElementById('btn-stop').classList.add('btn-disabled-fake');
-        };
+                    document
+                        .querySelectorAll(
+                            ".intercept-btn"
+                        )
+                        .forEach(
+                            (item) => {
+                                item.classList.remove(
+                                    "btn-intercept-active"
+                                );
+
+                                item.classList.add(
+                                    "btn-intercept"
+                                );
+
+                                item.textContent =
+                                    "INTERCEPT";
+                            }
+                        );
+
+                    setStatus(
+                        "STOPPING",
+                        "text-yellow-400",
+                        "bg-yellow-500"
+                    );
+                }
+
+                return;
+            }
+
+            if (
+                state.mitmTarget !== null
+            ) {
+                logMessage(
+                    "Another MITM session is already active."
+                );
+
+                return;
+            }
+
+            state.mitmTarget = ip;
+
+            document
+                .querySelectorAll(
+                    ".intercept-btn"
+                )
+                .forEach(
+                    (item) => {
+                        item.classList.remove(
+                            "btn-intercept-active"
+                        );
+
+                        item.classList.add(
+                            "btn-intercept"
+                        );
+
+                        item.textContent =
+                            "INTERCEPT";
+                    }
+                );
+
+            button.classList.remove(
+                "btn-intercept"
+            );
+
+            button.classList.add(
+                "btn-intercept-active"
+            );
+
+            button.textContent =
+                "STOP MITM";
+
+            setStatus(
+                "STARTING",
+                "text-yellow-400",
+                "bg-yellow-500"
+            );
+
+            const sent = sendCommand({
+                action: "start_mitm",
+                target_ip: ip,
+                target_mac: mac
+            });
+
+            if (!sent) {
+                state.mitmTarget = null;
+            }
+        }
+
+        function updateScanButtons() {
+            if (state.scanActive) {
+                elements.startScan.classList.add(
+                    "btn-disabled-fake"
+                );
+
+                elements.stopScan.classList.remove(
+                    "btn-disabled-fake"
+                );
+            } else {
+                elements.startScan.classList.remove(
+                    "btn-disabled-fake"
+                );
+
+                elements.stopScan.classList.add(
+                    "btn-disabled-fake"
+                );
+            }
+        }
+
+        function startScan() {
+            if (
+                state.scanActive
+                || state.mitmTarget
+            ) {
+                return;
+            }
+
+            if (
+                sendCommand({
+                    action: "start_scan"
+                })
+            ) {
+                state.scanActive = true;
+
+                updateScanButtons();
+
+                setStatus(
+                    "SCANNING",
+                    "text-purple-400",
+                    "bg-purple-500 animate-pulse"
+                );
+            }
+        }
+
+        function stopScan() {
+            if (
+                !state.scanActive
+            ) {
+                return;
+            }
+
+            if (
+                sendCommand({
+                    action: "stop_scan"
+                })
+            ) {
+                setStatus(
+                    "STOPPING",
+                    "text-yellow-400",
+                    "bg-yellow-500"
+                );
+            }
+        }
+
+        async function loadInterfaces() {
+            try {
+                const response =
+                    await fetch(
+                        "/api/interfaces",
+                        {
+                            cache: "no-store"
+                        }
+                    );
+
+                if (!response.ok) {
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+                }
+
+                const data =
+                    await response.json();
+
+                if (
+                    !Array.isArray(
+                        data.interfaces
+                    )
+                ) {
+                    throw new Error(
+                        data.error
+                        || "Invalid interface response"
+                    );
+                }
+
+                elements.interfaceSelect.replaceChildren();
+
+                data.interfaces
+                    .filter(
+                        (name) =>
+                            name !== "lo"
+                    )
+                    .forEach(
+                        (name) => {
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value = name;
+                            option.textContent =
+                                name;
+
+                            elements.interfaceSelect.appendChild(
+                                option
+                            );
+                        }
+                    );
+
+                if (
+                    data.interfaces.length > 0
+                ) {
+                    const first =
+                        elements.interfaceSelect
+                            .options[0];
+
+                    if (first) {
+                        first.selected = true;
+                        state.selectedInterface =
+                            first.value;
+                    }
+                }
+
+                if (
+                    data.error
+                ) {
+                    logMessage(
+                        `Interface discovery warning: ${data.error}`
+                    );
+                }
+            } catch (error) {
+                logMessage(
+                    `Interface discovery failed: ${error.message}`
+                );
+
+                setStatus(
+                    "NETWORK ERROR",
+                    "text-red-400",
+                    "bg-red-500"
+                );
+            }
+        }
+
+        function trimTrafficData() {
+            const now =
+                performance.now();
+
+            while (
+                state.trafficData.length
+                && now -
+                    state.trafficData[0].time
+                    > 60000
+            ) {
+                state.trafficData.shift();
+            }
+
+            if (
+                state.trafficData.length > 120
+            ) {
+                state.trafficData.splice(
+                    0,
+                    state.trafficData.length - 120
+                );
+            }
+        }
+
+        function resizeCanvas() {
+            const rect =
+                elements.canvas.getBoundingClientRect();
+
+            const ratio =
+                window.devicePixelRatio || 1;
+
+            elements.canvas.width =
+                Math.max(
+                    1,
+                    Math.floor(
+                        rect.width * ratio
+                    )
+                );
+
+            elements.canvas.height =
+                Math.max(
+                    1,
+                    Math.floor(
+                        rect.height * ratio
+                    )
+                );
+
+            canvasContext.setTransform(
+                ratio,
+                0,
+                0,
+                ratio,
+                0,
+                0
+            );
+        }
+
+        function drawGraph() {
+            state.trafficFrame =
+                requestAnimationFrame(
+                    drawGraph
+                );
+
+            const rect =
+                elements.canvas.getBoundingClientRect();
+
+            const width =
+                rect.width;
+
+            const height =
+                rect.height;
+
+            if (
+                width <= 0
+                || height <= 0
+            ) {
+                return;
+            }
+
+            const now =
+                performance.now();
+
+            const pxPerSecond =
+                width / 60;
+
+            canvasContext.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+            canvasContext.strokeStyle =
+                "rgba(189, 0, 255, 0.1)";
+
+            canvasContext.lineWidth = 1;
+
+            for (
+                let x = 0;
+                x < width;
+                x += 20
+            ) {
+                canvasContext.beginPath();
+                canvasContext.moveTo(
+                    x,
+                    0
+                );
+                canvasContext.lineTo(
+                    x,
+                    height
+                );
+                canvasContext.stroke();
+            }
+
+            for (
+                let y = 0;
+                y < height;
+                y += 20
+            ) {
+                canvasContext.beginPath();
+                canvasContext.moveTo(
+                    0,
+                    y
+                );
+                canvasContext.lineTo(
+                    width,
+                    y
+                );
+                canvasContext.stroke();
+            }
+
+            trimTrafficData();
+
+            const maxValue =
+                Math.max(
+                    10,
+                    ...state.trafficData.map(
+                        (point) =>
+                            Math.max(
+                                point.rx,
+                                point.tx
+                            )
+                    )
+                );
+
+            const scale =
+                (height - 10)
+                / maxValue;
+
+            drawTrafficLine(
+                "#00E5FF",
+                "rgba(0, 229, 255, 0.8)",
+                "rx",
+                now,
+                pxPerSecond,
+                scale,
+                width,
+                height
+            );
+
+            drawTrafficLine(
+                "#BD00FF",
+                "rgba(189, 0, 255, 0.8)",
+                "tx",
+                now,
+                pxPerSecond,
+                scale,
+                width,
+                height
+            );
+        }
+
+        function drawTrafficLine(
+            color,
+            glow,
+            key,
+            now,
+            pxPerSecond,
+            scale,
+            width,
+            height
+        ) {
+            if (
+                state.trafficData.length === 0
+            ) {
+                return;
+            }
+
+            canvasContext.strokeStyle =
+                color;
+
+            canvasContext.lineWidth = 2;
+            canvasContext.shadowBlur = 10;
+            canvasContext.shadowColor =
+                glow;
+
+            canvasContext.beginPath();
+
+            let visiblePoints = 0;
+
+            state.trafficData.forEach(
+                (point) => {
+                    const age =
+                        (now - point.time)
+                        / 1000;
+
+                    const x =
+                        width
+                        - age * pxPerSecond;
+
+                    const y =
+                        height
+                        - Math.min(
+                            height - 5,
+                            point[key] * scale
+                        );
+
+                    if (
+                        x < -10
+                        || x > width + 10
+                    ) {
+                        return;
+                    }
+
+                    if (
+                        visiblePoints === 0
+                    ) {
+                        canvasContext.moveTo(
+                            x,
+                            y
+                        );
+                    } else {
+                        canvasContext.lineTo(
+                            x,
+                            y
+                        );
+                    }
+
+                    visiblePoints += 1;
+                }
+            );
+
+            if (
+                visiblePoints > 0
+            ) {
+                canvasContext.stroke();
+            }
+
+            canvasContext.shadowBlur = 0;
+        }
+
+        document
+            .querySelectorAll(".pkt-tab")
+            .forEach(
+                (tab) => {
+                    tab.addEventListener(
+                        "click",
+                        () => {
+                            document
+                                .querySelectorAll(
+                                    ".pkt-tab"
+                                )
+                                .forEach(
+                                    (item) =>
+                                        item.classList.remove(
+                                            "active"
+                                        )
+                                );
+
+                            tab.classList.add(
+                                "active"
+                            );
+
+                            state.activeFilter =
+                                tab.dataset.filter
+                                || "ALL";
+
+                            renderPackets();
+                        }
+                    );
+                }
+            );
+
+        elements.packetSearch.addEventListener(
+            "input",
+            () => {
+                state.searchQuery =
+                    elements.packetSearch.value;
+
+                renderPackets();
+            }
+        );
+
+        elements.closeModal.addEventListener(
+            "click",
+            closeModal
+        );
+
+        elements.packetModal.addEventListener(
+            "click",
+            (event) => {
+                if (
+                    event.target
+                    === elements.packetModal
+                ) {
+                    closeModal();
+                }
+            }
+        );
+
+        elements.interfaceSelect.addEventListener(
+            "change",
+            (event) => {
+                const value =
+                    event.target.value;
+
+                if (!value) {
+                    return;
+                }
+
+                state.selectedInterface =
+                    value;
+
+                sendCommand({
+                    action: "set_interface",
+                    interface: value
+                });
+            }
+        );
+
+        elements.startScan.addEventListener(
+            "click",
+            startScan
+        );
+
+        elements.stopScan.addEventListener(
+            "click",
+            stopScan
+        );
+
+        window.addEventListener(
+            "resize",
+            resizeCanvas
+        );
+
+        window.addEventListener(
+            "beforeunload",
+            () => {
+                if (
+                    state.socket
+                    && state.socket.readyState
+                    === WebSocket.OPEN
+                ) {
+                    state.socket.close();
+                }
+
+                if (
+                    state.trafficFrame !== null
+                ) {
+                    cancelAnimationFrame(
+                        state.trafficFrame
+                    );
+                }
+            }
+        );
+
+        resizeCanvas();
+        drawGraph();
+        updateScanButtons();
+
+        const operatorToken =
+            new URLSearchParams(
+                window.location.search
+            ).get("token");
+
+        if (
+            operatorToken
+            && operatorToken.length > 0
+        ) {
+            sessionStorage.setItem(
+                "mirage_operator_token",
+                operatorToken
+            );
+
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
+        }
+
+        loadInterfaces();
+        connectWebSocket();
     </script>
 </body>
 </html>

@@ -1,85 +1,258 @@
+from __future__ import annotations
+
 import subprocess
 import threading
-import re
+import xml.etree.ElementTree as ET
+
 
 class NetworkScanner:
-    def __init__(self, interface, on_log_callback, on_host_callback):
+    def __init__(
+        self,
+        interface: str,
+        on_log_callback,
+        on_host_callback,
+    ):
         self.interface = interface
         self.on_log = on_log_callback
         self.on_host = on_host_callback
+
         self.stop_event = threading.Event()
-        self.thread = None
-        self.process = None
 
-    def is_alive(self):
-        return self.thread and self.thread.is_alive()
+        self.thread: threading.Thread | None = None
+        self.process: subprocess.Popen[str] | None = None
 
-    def start(self, subnet="192.168.1.0/24"):
-        self.stop_event.clear()
-        self.thread = threading.Thread(target=self._scan_loop, args=(subnet,), daemon=True)
-        self.thread.start()
+        self.process_lock = threading.Lock()
+        self.lifecycle_lock = threading.Lock()
 
-    def stop(self):
-        self.stop_event.set()
-        if self.process:
-            self.process.terminate()
-        if self.thread and self.thread.is_alive():
-            self.thread.join(timeout=2)
-        self.on_log("[!] Network scan stopped.")
+        self.running = False
 
-    def _scan_loop(self, subnet):
-        self.on_log(f"[*] Running nmap scan on {subnet}...")
-        cmd = ["nmap", "-sn", subnet]
-        hosts = []
-        current_ip = None
-        current_mac = None
-        current_vendor = None
-        current_hostname = None
+    def is_alive(self) -> bool:
+        thread = self.thread
+        return bool(
+            thread
+            and thread.is_alive()
+        )
+
+    def start(
+        self,
+        subnet: str,
+    ) -> None:
+        with self.lifecycle_lock:
+            if self.running:
+                raise RuntimeError(
+                    "Network scanner is already running"
+                )
+
+            self.stop_event.clear()
+
+            self.thread = threading.Thread(
+                target=self._scan_loop,
+                args=(subnet,),
+                name="mirage-network-scanner",
+                daemon=True,
+            )
+
+            self.running = True
+            self.thread.start()
+
+    def stop(self) -> None:
+        with self.lifecycle_lock:
+            if not self.running:
+                return
+
+            self.stop_event.set()
+
+            with self.process_lock:
+                process = self.process
+
+            if process is not None:
+                try:
+                    process.terminate()
+                except Exception:
+                    pass
+
+                try:
+                    process.wait(
+                        timeout=2
+                    )
+                except subprocess.TimeoutExpired:
+                    try:
+                        process.kill()
+                    finally:
+                        process.wait(
+                            timeout=2
+                        )
+
+            thread = self.thread
+
+            if thread is not None:
+                thread.join(
+                    timeout=3
+                )
+
+                if thread.is_alive():
+                    raise RuntimeError(
+                        "Network scanner thread did not stop gracefully"
+                    )
+
+            self.thread = None
+            self.running = False
+
+            self.on_log(
+                "[!] Network scan stopped."
+            )
+
+    def _scan_loop(
+        self,
+        subnet: str,
+    ) -> None:
+        self.on_log(
+            f"[*] Running nmap scan on {subnet}..."
+        )
+
+        command = [
+            "nmap",
+            "-sn",
+            "-oX",
+            "-",
+            subnet,
+        ]
 
         try:
-            self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            
-            for line in self.process.stdout:
-                if self.stop_event.is_set():
-                    break
-                    
-                line = line.strip()
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True,
+                bufsize=1,
+            )
 
-                if "Nmap scan report for" in line:
-                    if current_ip:
-                        hosts.append({
-                            "ip": current_ip, 
-                            "mac": current_mac or "Unknown", 
-                            "vendor": current_vendor or "Unknown",
-                            "hostname": current_hostname or "Unknown"
-                        })
-                        current_mac = None
-                        current_vendor = None
-                        current_hostname = None
+            with self.process_lock:
+                self.process = process
 
-                    match = re.search(r"for (?:([^\s]+)\s\()?((?:\d{1,3}\.){3}\d{1,3})\)?", line)
-                    if match:
-                        current_hostname = match.group(1) if match.group(1) else "Unknown"
-                        current_ip = match.group(2)
-                        
-                elif "MAC Address:" in line:
-                    match = re.search(r"MAC Address: ([0-9A-Fa-f:]{17})\s*(?:\((.*)\))?", line)
-                    if match:
-                        current_mac = match.group(1)
-                        current_vendor = match.group(2) if match.group(2) else "Unknown"
-                        self.on_log(f"[+] Host found: {current_ip} ({current_mac}) - {current_vendor}")
+            stdout, _ = process.communicate()
 
-            if current_ip:
-                hosts.append({
-                    "ip": current_ip, 
-                    "mac": current_mac or "Unknown", 
-                    "vendor": current_vendor or "Unknown",
-                    "hostname": current_hostname or "Unknown"
-                })
+            if self.stop_event.is_set():
+                return
+
+            if process.returncode not in (
+                0,
+                None,
+            ):
+                raise RuntimeError(
+                    f"Nmap exited with code {process.returncode}"
+                )
+
+            hosts = self._parse_xml(
+                stdout
+            )
 
             if not self.stop_event.is_set():
                 self.on_host(hosts)
-                self.on_log(f"[*] Scan complete. Found {len(hosts)} active hosts.")
-                
-        except Exception as e:
-            self.on_log(f"[-] Scan error: {e}")
+                self.on_log(
+                    f"[*] Scan complete. Found {len(hosts)} active hosts."
+                )
+
+        except FileNotFoundError as exc:
+            self.on_log(
+                f"[-] Nmap is not installed: {exc}"
+            )
+
+        except ET.ParseError as exc:
+            self.on_log(
+                f"[-] Failed to parse Nmap XML: {exc}"
+            )
+
+        except Exception as exc:
+            if not self.stop_event.is_set():
+                self.on_log(
+                    f"[-] Scan error: {exc}"
+                )
+
+        finally:
+            with self.process_lock:
+                self.process = None
+
+            self.running = False
+
+    def _parse_xml(
+        self,
+        xml_data: str,
+    ) -> list[dict[str, str]]:
+        root = ET.fromstring(
+            xml_data
+        )
+
+        hosts: list[dict[str, str]] = []
+
+        for host in root.findall(
+            ".//host"
+        ):
+            status = host.find(
+                "status"
+            )
+
+            if (
+                status is not None
+                and status.get("state") != "up"
+            ):
+                continue
+
+            ip_value = "Unknown"
+            mac_value = "Unknown"
+            vendor_value = "Unknown"
+            hostname_value = "Unknown"
+
+            for address in host.findall(
+                "address"
+            ):
+                address_type = address.get(
+                    "addrtype"
+                )
+
+                if address_type == "ipv4":
+                    ip_value = (
+                        address.get(
+                            "addr"
+                        )
+                        or "Unknown"
+                    )
+
+                elif address_type == "mac":
+                    mac_value = (
+                        address.get(
+                            "addr"
+                        )
+                        or "Unknown"
+                    )
+
+                    vendor_value = (
+                        address.get(
+                            "vendor"
+                        )
+                        or "Unknown"
+                    )
+
+            hostname = host.find(
+                "./hostnames/hostname"
+            )
+
+            if hostname is not None:
+                hostname_value = (
+                    hostname.get(
+                        "name"
+                    )
+                    or "Unknown"
+                )
+
+            if ip_value != "Unknown":
+                hosts.append(
+                    {
+                        "ip": ip_value,
+                        "mac": mac_value,
+                        "vendor": vendor_value,
+                        "hostname": hostname_value,
+                    }
+                )
+
+        return hosts

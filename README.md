@@ -357,17 +357,6 @@ Generate a strong token with:
 python3 -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-Never commit `.env` to Git.
-
-Your `.gitignore` should contain:
-
-```gitignore
-.env
-logs/
-__pycache__/
-*.pyc
-```
-
 ---
 
 # 📦 Installation
@@ -609,45 +598,18 @@ whenever rollback is able to complete successfully.
 
 <div align="center">
 
-<img width="1920" alt="MIRAGE Dashboard" src="[https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd](https://github.com/user-attachments/assets/11437684-7ed5-4512-bca0-483ca656eedd)" />
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_00_15" src="https://github.com/user-attachments/assets/a80c4c7b-d58d-47eb-aeac-ba38bc8797c0" />
 
-<img width="1920" alt="MIRAGE Packet Analysis" src="[https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519](https://github.com/user-attachments/assets/76f151f0-3928-49b2-b94a-4066c4471519)" />
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_27" src="https://github.com/user-attachments/assets/ca9de018-62a1-4f8c-a63f-6784446b8810" />
 
-<img width="1920" alt="MIRAGE Live Monitoring" src="[https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287](https://github.com/user-attachments/assets/68f758ab-5a10-4300-941f-4b0de4fb8287)" />
 
 </div>
-
----
-
-# 🤝 Acknowledgements
-
-MIRAGE was developed with significant assistance from AI during the engineering process.
-
-AI assistance was used as a development co-pilot for areas including:
-
-* architecture design
-* debugging
-* concurrency reasoning
-* UI development
-* code review
-* refactoring
-* documentation
-
-The final project, integration decisions, testing, deployment, and engineering direction remain the responsibility of the project author.
 
 ---
 
 # 📄 License
 
 MIRAGE is released under the MIT License.
-
-See:
-
-```text
-LICENSE
-```
-
-for the complete license text.
 
 ---
 

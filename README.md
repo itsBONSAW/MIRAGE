@@ -1,4 +1,4 @@
-<img width="100%" alt="MIRAGE Banner" src="[https://github.com/user-attachments/assets/e91d309f-12b6-4db4-a821-bd6d407dcd9b](https://github.com/user-attachments/assets/e91d309f-12b6-4db4-a821-bd6d407dcd9b)" />
+<img width="1280" height="720" alt="3bf38adf-6610-469b-861a-f31ce7c213a8" src="https://github.com/user-attachments/assets/dc8e3465-3af0-43bf-aba9-1d3eb3646ed1" />
 
 <div align="center">
 
@@ -601,6 +601,8 @@ whenever rollback is able to complete successfully.
 <img width="1920" height="1080" alt="Screenshot_2026-08-12_21_00_15" src="https://github.com/user-attachments/assets/a80c4c7b-d58d-47eb-aeac-ba38bc8797c0" />
 
 <img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_27" src="https://github.com/user-attachments/assets/ca9de018-62a1-4f8c-a63f-6784446b8810" />
+
+<img width="1920" height="1080" alt="Screenshot_2026-08-12_21_13_58" src="https://github.com/user-attachments/assets/4e0551ea-6f58-41b3-86e5-4e4bed62a77f" />
 
 
 </div>

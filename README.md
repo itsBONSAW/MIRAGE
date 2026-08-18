@@ -1,5 +1,7 @@
 <img width="1280" height="720" alt="3bf38adf-6610-469b-861a-f31ce7c213a8" src="https://github.com/user-attachments/assets/dc8e3465-3af0-43bf-aba9-1d3eb3646ed1" />
+
 <div align="center">
+        
 # M I R A G E
 
 ### MITM Interception, Routing & Analytical Graph Engine

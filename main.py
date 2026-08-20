@@ -93,7 +93,7 @@ class NetworkSnapshot:
         )
 
         self.session_dir = Path(
-            tempfile.mkdtemp(prefix="mirage_", mode=0o700)
+            tempfile.mkdtemp(prefix="mirage_")
         )
 
         self.iptables_path = self.session_dir / "iptables.save"

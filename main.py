@@ -34,6 +34,8 @@ if not ACCESS_TOKEN:
         "\n[!] MIRAGE_ACCESS_TOKEN is not set."
         "\n[!] Generated temporary access token:"
         f"\n    {ACCESS_TOKEN}\n"
+        "[+] Open MIRAGE in your browser:"
+        f"http://127.0.0.1:9000/?token={ACCESS_TOKEN}\n"
     )
 
 

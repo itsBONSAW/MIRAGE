@@ -28,19 +28,6 @@ load_dotenv()
 
 ACCESS_TOKEN = os.getenv("MIRAGE_ACCESS_TOKEN")
 
-if not ACCESS_TOKEN:
-    ACCESS_TOKEN = secrets.token_urlsafe(24)
-    print(
-        "\n[!] MIRAGE_ACCESS_TOKEN is not set."
-        "\n[!] Generated temporary access token:"
-        f"\n    {ACCESS_TOKEN}\n"
-    )
-
-print(
-    "[+] Open MIRAGE in your browser:"
-    f"http://127.0.0.1:9000/?token={ACCESS_TOKEN}\n"
-)
-
 class CommandError(RuntimeError):
     pass
 
@@ -1176,9 +1163,19 @@ async def websocket_endpoint(
 
 
 if __name__ == "__main__":
+    if not ACCESS_TOKEN:
+        ACCESS_TOKEN = secrets.token_urlsafe(24)
+        os.environ["MIRAGE_ACCESS_TOKEN"] = ACCESS_TOKEN
+        print(
+            "\n[!] MIRAGE_ACCESS_TOKEN is not set."
+            "\n[!] Generated temporary access token:"
+            f"\n    {ACCESS_TOKEN}\n"
+        )
+    print(f"[+] Open MIRAGE in your browser: http://127.0.0.1:8000/?token={ACCESS_TOKEN}\n")
+    
     uvicorn.run(
         "main:app",
         host="127.0.0.1",
-        port=9000,
+        port=8000,
         reload=False,
     )
